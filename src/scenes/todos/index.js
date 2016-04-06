@@ -33,6 +33,31 @@ class TodosScene extends Component {
   static defaultProps = {
   };
 
+  constructor (props) {
+    super(props)
+
+    const { dispatch } = props
+
+    this.handleKeyDown = this.handleKeyDown.bind(this)
+
+    this.showAll = () => dispatch(showAll())
+    this.showActive = () => dispatch(showActive())
+    this.showCompleted = () => dispatch(showCompleted())
+  }
+
+  handleKeyDown (e) {
+    const { dispatch } = this.props
+
+    if (e.keyCode === 13) {
+      const { value } = this.refs.newTodo
+
+      if (value) {
+        dispatch(addTodo(value))
+        this.refs.newTodo.value = ''
+      }
+    }
+  }
+
   render () {
     const { visibilityFilter, visibleTodos, todoCount, activeTodoCount, completedTodoCount } = this.props
 
@@ -41,11 +66,20 @@ class TodosScene extends Component {
         <section className='todoapp'>
           <header className='header'>
             <h1>todos</h1>
-            <input className='new-todo' placeholder='What needs to be done?' />
+            <input ref='newTodo' className='new-todo' placeholder='What needs to be done?' onKeyDown={this.handleKeyDown} />
           </header>
           {todoCount > 0 ? (
             <section className='main'>
-
+              <ul className='todo-list'>
+                {visibleTodos.map(todo => (
+                  <li className={todo.completed ? 'completed' : ''} key={todo.id}>
+                    <div className='view'>
+                      <input className='toggle' type='checkbox' />
+                      <label>{todo.todo}</label>
+                    </div>
+                  </li>
+                ))}
+              </ul>
             </section>
           ) : null}
           {todoCount > 0 ? (
@@ -55,13 +89,13 @@ class TodosScene extends Component {
               </span>
               <ul className='filters'>
                 <li>
-                  <a href='#' className='selected'>All</a>
+                  <a href='#' onClick={this.showAll} className={visibilityFilter === SHOW_ALL ? 'selected' : ''}>All</a>
                 </li>
                 <li>
-                  <a href='#'>Active</a>
+                  <a href='#' onClick={this.showActive} className={visibilityFilter === SHOW_ACTIVE ? 'selected' : ''}>Active</a>
                 </li>
                 <li>
-                  <a href='#'>Completed</a>
+                  <a href='#' onClick={this.showCompleted} className={visibilityFilter === SHOW_COMPLETED ? 'selected' : ''}>Completed</a>
                 </li>
               </ul>
               {completedTodoCount > 0 ? (
