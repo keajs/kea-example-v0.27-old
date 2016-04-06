@@ -9,7 +9,7 @@ module.exports = {
   context: path.join(__dirname, './src'),
   entry: {
     js: './index.js',
-    vendor: ['react']
+    vendor: ['babel-polyfill', 'react']
   },
   output: {
     path: path.join(__dirname, './static'),
@@ -54,7 +54,10 @@ module.exports = {
     modules: [
       path.resolve('./src'),
       'node_modules'
-    ]
+    ],
+    alias: {
+      '~': path.join(__dirname, './src')
+    }
   },
   plugins: [
     new webpack.optimize.CommonsChunkPlugin({
