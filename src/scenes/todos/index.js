@@ -9,20 +9,22 @@ import sceneLogic from './logic'
 const { SHOW_ALL, SHOW_ACTIVE, SHOW_COMPLETED } = sceneLogic.constants
 const { showAll, showActive, showCompleted, addTodo, removeTodo, completeTodo, unCompleteTodo, clearCompleted } = sceneLogic.actions
 
-const propSelector = selectPropsFromLogic({
-  visibilityFilter: sceneLogic,
-  visibleTodos: sceneLogic,
-  todoCount: sceneLogic,
-  activeTodoCount: sceneLogic,
-  completedTodoCount: sceneLogic
-})
+const propSelector = selectPropsFromLogic([
+  sceneLogic, [
+    'visibilityFilter',
+    'visibleTodos',
+    'todoCount',
+    'activeTodoCount',
+    'completedTodoCount',
+  ]
+])
 
 class TodosScene extends Component {
   static propTypes = {
     // libs
     dispatch: React.PropTypes.func.isRequired,
 
-    // selector
+    // sceneLogic
     visibilityFilter: React.PropTypes.string.isRequired,
     visibleTodos: React.PropTypes.array.isRequired,
     todoCount: React.PropTypes.number.isRequired,
