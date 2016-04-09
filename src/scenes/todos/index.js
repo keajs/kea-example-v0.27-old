@@ -4,6 +4,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { selectPropsFromLogic } from 'kea-logic'
 
+import Todo from './todo'
+
 import sceneLogic from './logic'
 
 const { SHOW_ALL, SHOW_ACTIVE, SHOW_COMPLETED } = sceneLogic.constants
@@ -45,6 +47,7 @@ class TodosScene extends Component {
     this.showAll = () => dispatch(showAll())
     this.showActive = () => dispatch(showActive())
     this.showCompleted = () => dispatch(showCompleted())
+    this.clearCompleted = () => dispatch(clearCompleted())
   }
 
   handleKeyDown (e) {
@@ -73,14 +76,7 @@ class TodosScene extends Component {
           {todoCount > 0 ? (
             <section className='main'>
               <ul className='todo-list'>
-                {visibleTodos.map(todo => (
-                  <li className={todo.completed ? 'completed' : ''} key={todo.id}>
-                    <div className='view'>
-                      <input className='toggle' type='checkbox' />
-                      <label>{todo.todo}</label>
-                    </div>
-                  </li>
-                ))}
+                {visibleTodos.map(todo => <Todo key={todo.id} todo={todo} />)}
               </ul>
             </section>
           ) : null}
@@ -101,7 +97,7 @@ class TodosScene extends Component {
                 </li>
               </ul>
               {completedTodoCount > 0 ? (
-                <button className='clear-completed'>Clear completed</button>
+                <button className='clear-completed' onClick={this.clearCompleted}>Clear completed</button>
               ) : null}
             </footer>
           ) : null}
