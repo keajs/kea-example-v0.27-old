@@ -9,7 +9,9 @@ import Todo from './todo'
 import sceneLogic from './logic'
 
 const { SHOW_ALL, SHOW_ACTIVE, SHOW_COMPLETED } = sceneLogic.constants
-const { showAll, showActive, showCompleted, addTodo, clearCompleted } = sceneLogic.actions
+const { showAll, showActive, showCompleted, addTodo, toggleAll, clearCompleted } = sceneLogic.actions
+
+const ENTER = 13
 
 const propSelector = selectPropsFromLogic([
   sceneLogic, [
@@ -47,13 +49,14 @@ class TodosScene extends Component {
     this.showAll = () => dispatch(showAll())
     this.showActive = () => dispatch(showActive())
     this.showCompleted = () => dispatch(showCompleted())
+    this.toggleAll = (e) => dispatch(toggleAll(e.target.checked))
     this.clearCompleted = () => dispatch(clearCompleted())
   }
 
   handleKeyDown (e) {
     const { dispatch } = this.props
 
-    if (e.keyCode === 13) {
+    if (e.keyCode === ENTER) {
       const node = this.refs.newTodo
 
       if (node.value.trim()) {
@@ -75,6 +78,7 @@ class TodosScene extends Component {
           </header>
           {todoCount > 0 ? (
             <section className='main'>
+              <input className='toggle-all' type='checkbox' onChange={this.toggleAll} checked={activeTodoCount === 0} />
               <ul className='todo-list'>
                 {visibleTodos.map(todo => <Todo key={todo.id} todo={todo} />)}
               </ul>

@@ -28,6 +28,7 @@ export const actions = {
   completeTodo: createAction('complete todo', id => ({ id })),
   unCompleteTodo: createAction('complete todo', id => ({ id })),
   renameTodo: createAction('rename todo', (id, todo) => ({ id, todo })),
+  toggleAll: createAction('toggle all todos', (completed) => ({ completed })),
   clearCompleted: createAction('clear completed todos')
 }
 
@@ -71,6 +72,11 @@ export const reducer = combineReducers({
         } else {
           return todo
         }
+      })
+    },
+    [actions.toggleAll]: (state, payload) => {
+      return state.map(todo => {
+        return Object.assign({}, todo, { completed: payload.completed })
       })
     },
     [actions.clearCompleted]: (state, payload) => {

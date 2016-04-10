@@ -53,9 +53,9 @@ class Todo extends Component {
   }
 
   onKeyDown (e) {
-    if (e.which === ESCAPE) {
+    if (e.keyCode === ESCAPE) {
       this.cancelTodo()
-    } else if (e.which === ENTER) {
+    } else if (e.keyCode === ENTER) {
       this.saveTodo()
     }
   }
@@ -87,7 +87,7 @@ class Todo extends Component {
       ) : (
         <li className={todo.completed ? 'completed' : ''}>
           <div className='view'>
-            <input className='toggle' type='checkbox' onChange={todo.completed ? this.unCompleteTodo : this.completeTodo} />
+            <input className='toggle' checked={todo.completed} type='checkbox' onChange={todo.completed ? this.unCompleteTodo : this.completeTodo} />
             <label onDoubleClick={this.setEditing}>{todo.todo}</label>
             <button className='destroy' onClick={this.removeTodo}></button>
           </div>
