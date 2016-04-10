@@ -9,7 +9,7 @@ import Todo from './todo'
 import sceneLogic from './logic'
 
 const { SHOW_ALL, SHOW_ACTIVE, SHOW_COMPLETED } = sceneLogic.constants
-const { showAll, showActive, showCompleted, addTodo, removeTodo, completeTodo, unCompleteTodo, clearCompleted } = sceneLogic.actions
+const { showAll, showActive, showCompleted, addTodo, clearCompleted } = sceneLogic.actions
 
 const propSelector = selectPropsFromLogic([
   sceneLogic, [
@@ -17,7 +17,7 @@ const propSelector = selectPropsFromLogic([
     'visibleTodos',
     'todoCount',
     'activeTodoCount',
-    'completedTodoCount',
+    'completedTodoCount'
   ]
 ])
 
@@ -54,11 +54,11 @@ class TodosScene extends Component {
     const { dispatch } = this.props
 
     if (e.keyCode === 13) {
-      const { value } = this.refs.newTodo
+      const node = this.refs.newTodo
 
-      if (value) {
-        dispatch(addTodo(value))
-        this.refs.newTodo.value = ''
+      if (node.value.trim()) {
+        dispatch(addTodo(node.value.trim()))
+        node.value = ''
       }
     }
   }

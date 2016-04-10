@@ -3,7 +3,10 @@ import { connect } from 'react-redux'
 
 import sceneLogic from '~/scenes/todos/logic'
 
-const { removeTodo, completeTodo, unCompleteTodo } = sceneLogic.actions
+const { renameTodo, removeTodo, completeTodo, unCompleteTodo } = sceneLogic.actions
+
+const ESCAPE = 27
+const ENTER = 13
 
 class Todo extends Component {
   static propTypes = {
@@ -11,7 +14,7 @@ class Todo extends Component {
     dispatch: React.PropTypes.func.isRequired,
 
     // props
-    todo: React.PropTypes.object.isRequired,
+    todo: React.PropTypes.object.isRequired
   };
 
   static defaultProps = {
@@ -20,24 +23,76 @@ class Todo extends Component {
   constructor (props) {
     super(props)
 
-    const { dispatch, todo } = props
+    const { dispatch } = props
 
-    this.removeTodo = () => dispatch(removeTodo(todo.id))
-    this.completeTodo = () => dispatch(completeTodo(todo.id))
-    this.unCompleteTodo = () => dispatch(unCompleteTodo(todo.id))
+    this.state = {
+      editing: false,
+      editValue: ''
+    }
+
+    this.renameTodo = (value) => dispatch(renameTodo(this.props.todo.id, value))
+    this.removeTodo = () => dispatch(removeTodo(this.props.todo.id))
+    this.completeTodo = () => dispatch(completeTodo(this.props.todo.id))
+    this.unCompleteTodo = () => dispatch(unCompleteTodo(this.props.todo.id))
+
+    this.setEditing = () => this.setState({ editing: true, editValue: this.props.todo.todo })
+    this.clearEditing = () => this.setState({ editing: false, editValue: '' })
+    this.updateEditValue = () => this.setState({ editValue: this.refs.editField.value })
+
+    this.onKeyDown = this.onKeyDown.bind(this)
+    this.saveTodo = this.saveTodo.bind(this)
+    this.cancelTodo = this.cancelTodo.bind(this)
+  }
+
+  componentDidUpdate (prevProps, prevState) {
+    if (this.state.editing && !prevState.editing) {
+      const node = this.refs.editField
+      node.focus()
+      node.setSelectionRange(node.value.length, node.value.length)
+    }
+  }
+
+  onKeyDown (e) {
+    if (e.which === ESCAPE) {
+      this.cancelTodo()
+    } else if (e.which === ENTER) {
+      this.saveTodo()
+    }
+  }
+
+  saveTodo () {
+    const { value } = this.refs.editField
+
+    if (value.trim()) {
+      this.renameTodo(value.trim())
+      this.clearEditing()
+    } else {
+      this.removeTodo()
+    }
+  }
+
+  cancelTodo () {
+    this.clearEditing()
   }
 
   render () {
     const { todo } = this.props
+    const { editing, editValue } = this.state
 
     return (
-      <li className={todo.completed ? 'completed' : ''} key={todo.id}>
-        <div className='view'>
-          <input className='toggle' type='checkbox' onChange={todo.completed ? this.unCompleteTodo : this.completeTodo} />
-          <label>{todo.todo}</label>
-          <button className='destroy' onClick={this.removeTodo}></button>
-        </div>
-      </li>
+      editing ? (
+        <li className='editing'>
+          <input className='edit' ref='editField' value={editValue} onKeyDown={this.onKeyDown} onChange={this.updateEditValue} onBlur={this.saveTodo} />
+        </li>
+      ) : (
+        <li className={todo.completed ? 'completed' : ''}>
+          <div className='view'>
+            <input className='toggle' type='checkbox' onChange={todo.completed ? this.unCompleteTodo : this.completeTodo} />
+            <label onDoubleClick={this.setEditing}>{todo.todo}</label>
+            <button className='destroy' onClick={this.removeTodo}></button>
+          </div>
+        </li>
+      )
     )
   }
 }

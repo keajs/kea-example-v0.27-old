@@ -27,7 +27,8 @@ export const actions = {
   removeTodo: createAction('remove todo', id => ({ id })),
   completeTodo: createAction('complete todo', id => ({ id })),
   unCompleteTodo: createAction('complete todo', id => ({ id })),
-  clearCompleted: createAction('clear completed todos'),
+  renameTodo: createAction('rename todo', (id, todo) => ({ id, todo })),
+  clearCompleted: createAction('clear completed todos')
 }
 
 // REDUCER
@@ -63,10 +64,19 @@ export const reducer = combineReducers({
         }
       })
     },
+    [actions.renameTodo]: (state, payload) => {
+      return state.map(todo => {
+        if (todo.id === payload.id) {
+          return Object.assign({}, todo, { todo: payload.todo })
+        } else {
+          return todo
+        }
+      })
+    },
     [actions.clearCompleted]: (state, payload) => {
       return state.filter(todo => !todo.completed)
-    },
-  }, []),
+    }
+  }, [])
 })
 
 // SELECTORS
