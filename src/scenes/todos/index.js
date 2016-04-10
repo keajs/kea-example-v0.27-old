@@ -106,6 +106,14 @@ class TodosScene extends Component {
             </footer>
           ) : null}
         </section>
+        <footer className='info'>
+          <p>
+            Double-click to edit a todo
+          </p>
+          <p>
+            Created by <a href='https://github.com/mariusandra'>mariusandra</a>
+          </p>
+        </footer>
       </div>
     )
   }
