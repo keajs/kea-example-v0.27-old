@@ -4,18 +4,26 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import { push } from 'react-router-redux'
+import { createStructuredSelector } from 'reselect'
+
+const selector = createStructuredSelector({
+  path: (state) => state.routing.locationBeforeTransitions.pathname
+})
 
 class Header extends Component {
   static propTypes = {
     // libs
-    dispatch: React.PropTypes.func.isRequired
+    dispatch: React.PropTypes.func.isRequired,
+
+    // react-router
+    path: React.PropTypes.string.isRequired
   };
 
   static defaultProps = {
   };
 
   render () {
-    const { dispatch } = this.props
+    const { dispatch, path } = this.props
 
     function load (url) {
       return (event) => { event.preventDefault(); dispatch(push(url)) }
@@ -24,8 +32,8 @@ class Header extends Component {
     return (
       <header className='body-header'>
         <nav>
-          <a href='/' onClick={load('/')}>Kea example</a>
-          <a href='/todos' onClick={load('/todos')} className='active'>Todos</a>
+          <a href='/' onClick={load('/')} className={path === '/' ? 'active' : ''}>Kea example</a>
+          <a href='/todos' onClick={load('/todos')} className={path.indexOf('/todos') === 0 ? 'active' : ''}>Todos</a>
           <a href='#'>Saga example</a>
         </nav>
       </header>
@@ -33,4 +41,4 @@ class Header extends Component {
   }
 }
 
-export default connect()(Header)
+export default connect(selector)(Header)
