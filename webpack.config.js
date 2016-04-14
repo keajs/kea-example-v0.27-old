@@ -8,12 +8,22 @@ module.exports = {
   devtool: isProd ? 'hidden-source-map' : 'cheap-eval-source-map',
   context: path.join(__dirname, './src'),
   entry: {
-    js: './index.js',
-    vendor: ['babel-polyfill', 'react']
+    common: [
+      'babel-polyfill', 'react',
+      './index.js'
+    ],
+    homepage: [
+      './scenes/homepage/index.js'
+    ],
+    todos: [
+      './scenes/todos/index.js'
+    ]
   },
   output: {
     path: path.join(__dirname, './static'),
-    filename: 'bundle.js'
+    publicPath: '/',
+    filename: '[name].bundle.js',
+    chunkFilename: '[name].bundle.js'
   },
   module: {
     loaders: [
@@ -69,9 +79,9 @@ module.exports = {
   },
   plugins: [
     new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
-      minChunks: Infinity,
-      filename: 'vendor.bundle.js'
+      name: 'common',
+      minChunks: 2,
+      filename: 'common.bundle.js'
     }),
     new webpack.LoaderOptionsPlugin({
       minimize: true,

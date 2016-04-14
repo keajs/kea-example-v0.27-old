@@ -1,50 +1,42 @@
 /* global window */
 
-// basic tools
-import React from 'react'
-import ReactDOM from 'react-dom'
-
 // selector
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux'
-import { Provider } from 'react-redux'
+import { routerReducer } from 'react-router-redux'
 import createSagaMiddleware from 'redux-saga'
+import { routerMiddleware } from 'react-router-redux'
+import { browserHistory } from 'react-router'
 
-import todosScene from '~/scenes/todos/scene'
-import homepageScene from '~/scenes/homepage/scene'
+// const rootSaga = todosScene.worker
 
-const rootSaga = todosScene.worker
-
-const sagaMiddleware = createSagaMiddleware(rootSaga)
+// const sagaMiddleware = createSagaMiddleware(rootSaga)
 const finalCreateStore = compose(
-  applyMiddleware(sagaMiddleware),
+  // applyMiddleware(sagaMiddleware),
+  applyMiddleware(
+    routerMiddleware(browserHistory)
+  ),
   window.devToolsExtension ? window.devToolsExtension() : f => f
 )(createStore)
 
-const rootReducer = combineReducers({
-  scenes: combineReducers({
-    todos: todosScene.reducer,
-    homepage: homepageScene.reducer
-  })
-  // form: formReducer,
-  // routing: routeReducer
-})
+function createReducer (scenes) {
+  const hasScenes = scenes && Object.keys(scenes).length > 0
 
-const configureStore = function configureStore (initialState) {
-  return finalCreateStore(rootReducer, initialState)
+  return combineReducers({
+    // form: formReducer,
+    routing: routerReducer,
+
+    scenes: hasScenes ? combineReducers(scenes) : () => ({})
+  })
 }
-const store = configureStore()
+
+const rootReducer = createReducer(loadedScenes)
+
+const store = finalCreateStore(rootReducer)
+
+let loadedScenes = {}
+store.addKeaScene = function (name, scene) {
+  loadedScenes[name] = scene.reducer
+  this.replaceReducer(createReducer(loadedScenes))
+}
 
 export default store
-//
-// // required for replaying actions from devtools to work
-// // reduxRouterMiddleware.listenForReplays(store)
-//
-// // wait until languages loaded, then do magic
-// i18n.changeLanguage(locale, () => {
-//   ReactDOM.render(
-//     <Provider store={store}>
-//       {routes}
-//     </Provider>,
-//     document.getElementById('root')
-//   )
-// })
