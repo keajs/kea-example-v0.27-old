@@ -4,7 +4,7 @@ const path = require('path')
 const nodeEnv = process.env.NODE_ENV || 'development'
 const isProd = nodeEnv === 'production'
 
-module.exports = {
+var config = {
   devtool: isProd ? 'hidden-source-map' : 'cheap-eval-source-map',
   context: path.join(__dirname, './src'),
   entry: {
@@ -13,10 +13,10 @@ module.exports = {
       './index.js'
     ],
     homepage: [
-      './scenes/homepage/index.js'
+      './scenes/homepage/scene.js'
     ],
     todos: [
-      './scenes/todos/index.js'
+      './scenes/todos/scene.js'
     ]
   },
   output: {
@@ -60,10 +60,9 @@ module.exports = {
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        loaders: [
-          // 'react-hot',
+        loaders: (isProd ? [] : ['react-hot']).concat([
           'babel-loader'
-        ]
+        ])
       }
     ]
   },
@@ -83,10 +82,6 @@ module.exports = {
       minChunks: 2,
       filename: 'common.bundle.js'
     }),
-    new webpack.LoaderOptionsPlugin({
-      minimize: true,
-      debug: false
-    }),
     new webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false
@@ -105,3 +100,15 @@ module.exports = {
     // hot: true
   }
 }
+
+// development mode
+if (!isProd) {
+  Object.keys(config.entry).forEach(function (k) {
+    config.entry[k].unshift(
+      'webpack-dev-server/client?http://0.0.0.0:2000',
+      'webpack/hot/only-dev-server'
+    )
+  })
+}
+
+module.exports = config
