@@ -4,14 +4,33 @@
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux'
 import { routerReducer } from 'react-router-redux'
 import createSagaMiddleware from 'redux-saga'
+import { take, cancel, fork } from 'redux-saga/effects'
 import { routerMiddleware } from 'react-router-redux'
 import { browserHistory } from 'react-router'
 
-// const rootSaga = todosScene.worker
+export const NEW_SCENE = '@@kea/NEW_SCENE'
 
-// const sagaMiddleware = createSagaMiddleware(rootSaga)
+let loadedReducers = {}
+let loadedWorkers = {}
+let currentScene = null
+
+const rootSaga = function * () {
+  let runningSaga = null
+
+  while (true) {
+    const { payload } = yield take(NEW_SCENE)
+
+    if (runningSaga) {
+      yield cancel(runningSaga)
+    }
+
+    runningSaga = yield fork(loadedWorkers[payload.name])
+  }
+}
+
+const sagaMiddleware = createSagaMiddleware(rootSaga)
 const finalCreateStore = compose(
-  // applyMiddleware(sagaMiddleware),
+  applyMiddleware(sagaMiddleware),
   applyMiddleware(
     routerMiddleware(browserHistory)
   ),
@@ -29,14 +48,27 @@ function createReducer (scenes) {
   })
 }
 
-const rootReducer = createReducer(loadedScenes)
+const rootReducer = createReducer(loadedReducers)
 
 const store = finalCreateStore(rootReducer)
 
-let loadedScenes = {}
 store.addKeaScene = function (name, scene) {
-  loadedScenes[name] = scene.reducer
-  this.replaceReducer(createReducer(loadedScenes))
+  if (currentScene === name) {
+    return
+  }
+
+  loadedReducers[name] = scene.reducer
+  loadedWorkers[name] = scene.worker
+  this.replaceReducer(createReducer(loadedReducers))
+
+  this.dispatch({
+    type: NEW_SCENE,
+    payload: {
+      name
+    }
+  })
+
+  currentScene = name
 }
 
 export default store
