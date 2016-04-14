@@ -24,7 +24,9 @@ const rootSaga = function * () {
       yield cancel(runningSaga)
     }
 
-    runningSaga = yield fork(loadedWorkers[payload.name])
+    if (loadedWorkers[payload.name]) {
+      runningSaga = yield fork(loadedWorkers[payload.name])
+    }
   }
 }
 
