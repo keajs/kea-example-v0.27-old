@@ -2,13 +2,13 @@ import { combineReducers } from 'redux'
 import { createAction, createReducer } from 'redux-act'
 import { createSelector } from 'reselect'
 import { createLogic, createSelectors } from 'kea-logic'
-import mirrorCreator from 'mirror-creator'
+// import mirrorCreator from 'mirror-creator'
 
 export const path = ['scenes', 'homepage', 'index']
 
 // CONSTANTS
-export const constants = mirrorCreator([
-])
+// export const constants = mirrorCreator([
+// ])
 
 // ACTIONS
 export const actions = {
@@ -21,7 +21,7 @@ export const reducer = combineReducers({
     [actions.updateName]: (state, payload) => {
       return payload.name
     }
-  }, 'chirpy')
+  }, 'Chirpy')
 })
 
 // SELECTORS
@@ -36,7 +36,7 @@ selectors.capitalizedName = createSelector(
 
 export default createLogic({
   path,
-  constants,
+  // constants,
   actions,
   reducer,
   selectors

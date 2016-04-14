@@ -16,6 +16,7 @@ export default function * saga () {
     }
   } catch (error) {
     if (error instanceof SagaCancellationException) {
+      console.log('Stopping homepage saga')
       console.log(`got to ${count}`)
       // saga cancelled, do cleanup
     } else {

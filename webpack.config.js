@@ -63,6 +63,11 @@ var config = {
         loaders: (isProd ? [] : ['react-hot']).concat([
           'babel-loader'
         ])
+      },
+      {
+        test: /\.(png|jpg)$/,
+        // inline base64 URLs for <=8k images, direct URLs for the rest
+        loader: 'url-loader?limit=8192'
       }
     ]
   },

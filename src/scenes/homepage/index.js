@@ -4,7 +4,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { selectPropsFromLogic } from 'kea-logic'
 
+import Slider from './slider'
+
 import sceneLogic from './logic'
+import sliderLogic from './slider/logic'
 
 const { updateName } = sceneLogic.actions
 
@@ -12,6 +15,10 @@ const propSelector = selectPropsFromLogic([
   sceneLogic, [
     'name',
     'capitalizedName'
+  ],
+  sliderLogic, [
+    'currentSlide',
+    'currentImage'
   ]
 ])
 
@@ -22,7 +29,9 @@ class HomepageScene extends Component {
 
     // sceneLogic
     name: React.PropTypes.string.isRequired,
-    capitalizedName: React.PropTypes.string.isRequired
+    capitalizedName: React.PropTypes.string.isRequired,
+    currentSlide: React.PropTypes.number.isRequired,
+    currentImage: React.PropTypes.object.isRequired
   };
 
   static defaultProps = {
@@ -35,11 +44,15 @@ class HomepageScene extends Component {
   }
 
   render () {
-    const { capitalizedName } = this.props
+    const { capitalizedName, currentSlide, currentImage } = this.props
 
     return (
       <div className='homepage-scene'>
-        <h1>Hello, my name is {capitalizedName}</h1>
+        <Slider />
+        <h1>Hello, I'm {capitalizedName} the Kea</h1>
+        <p>
+          You are viewing image #{currentSlide + 1}, taken by <a href={currentImage.url} target='_blank'>{currentImage.author}</a>
+        </p>
       </div>
     )
   }
