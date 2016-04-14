@@ -10,18 +10,20 @@ import { Provider } from 'react-redux'
 import createSagaMiddleware from 'redux-saga'
 
 import todosScene from '~/scenes/todos/scene'
+import homepageScene from '~/scenes/homepage/scene'
 
-const rootSaga = todosScene.saga
+const rootSaga = todosScene.worker
 
-// const sagaMiddleware = createSagaMiddleware(rootSaga)
+const sagaMiddleware = createSagaMiddleware(rootSaga)
 const finalCreateStore = compose(
-  // applyMiddleware(sagaMiddleware),
+  applyMiddleware(sagaMiddleware),
   window.devToolsExtension ? window.devToolsExtension() : f => f
 )(createStore)
 
 const rootReducer = combineReducers({
   scenes: combineReducers({
-    todos: todosScene.reducer
+    todos: todosScene.reducer,
+    homepage: homepageScene.reducer
   })
   // form: formReducer,
   // routing: routeReducer
