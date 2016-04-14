@@ -21,7 +21,8 @@
   "dependencies": {
     "babel-runtime": "^6.6.1",
     "es6-promise": "^3.1.2",
-    "kea-logic": "0.1.0",
+    "kea-logic": "0.1.2",
+    "kea-parallel": "^0.1.0",
     "mirror-creator": "^1.1.0",
     "react": "^0.14.7",
     "react-dom": "^0.14.7",
@@ -48,6 +49,7 @@
     "eslint-plugin-react": "^4.2.1",
     "eslint-plugin-standard": "^1.3.2",
     "file-loader": "^0.8.5",
+    "kea-parallel-loader": "^0.1.0",
     "node-sass": "^3.4.2",
     "react-addons-perf": "^0.14.7",
     "redux-devtools": "^3.1.1",
@@ -55,6 +57,7 @@
     "style-loader": "^0.13.0",
     "url-loader": "^0.5.7",
     "webpack": "^2.1.0-beta.4",
-    "webpack-dev-server": "^2.0.0-beta"
+    "webpack-dev-server": "^2.0.0-beta",
+    "worker-loader": "^0.7.0"
   }
 }

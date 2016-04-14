@@ -1,8 +1,8 @@
-const webpack = require('webpack');
-const path = require('path');
+const webpack = require('webpack')
+const path = require('path')
 
-const nodeEnv = process.env.NODE_ENV || 'development';
-const isProd = nodeEnv === 'production';
+const nodeEnv = process.env.NODE_ENV || 'development'
+const isProd = nodeEnv === 'production'
 
 module.exports = {
   devtool: isProd ? 'hidden-source-map' : 'cheap-eval-source-map',
@@ -40,14 +40,22 @@ module.exports = {
         ]
       },
       {
+        test: /\-worker\.js$/,
+        exclude: /node_modules/,
+        loaders: [
+          'worker',
+          'kea-parallel'
+        ]
+      },
+      {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         loaders: [
           // 'react-hot',
           'babel-loader'
         ]
-      },
-    ],
+      }
+    ]
   },
   resolve: {
     extensions: ['', '.js', '.jsx'],
@@ -86,4 +94,4 @@ module.exports = {
     contentBase: './src'
     // hot: true
   }
-};
+}
