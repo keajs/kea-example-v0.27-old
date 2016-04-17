@@ -40,7 +40,17 @@ class HomepageScene extends Component {
   constructor (props) {
     super(props)
 
-    this.updateName = (name) => this.props.dispatch(updateName(name))
+    this.updateName = this.updateName.bind(this)
+  }
+
+  updateName () {
+    const { dispatch, name } = this.props
+
+    const newName = window.prompt('Please enter the name', name)
+
+    if (newName) {
+      dispatch(updateName(newName))
+    }
   }
 
   render () {
@@ -49,7 +59,9 @@ class HomepageScene extends Component {
     return (
       <div className='homepage-scene'>
         <Slider />
-        <h1>Hello, I'm {capitalizedName} the Kea</h1>
+        <h1>
+          Hello, I'm <em onClick={this.updateName}>{capitalizedName}</em> the Kea
+        </h1>
         <p>
           You are viewing image #{currentSlide + 1}, taken by <a href={currentImage.url} target='_blank'>{currentImage.author}</a>
         </p>
