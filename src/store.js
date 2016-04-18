@@ -54,7 +54,9 @@ const rootReducer = createReducer(loadedReducers)
 
 const store = finalCreateStore(rootReducer)
 
-store.addKeaScene = function (name, scene) {
+store.addKeaScene = function (scene) {
+  const { name } = scene
+
   if (currentScene === name) {
     return
   }

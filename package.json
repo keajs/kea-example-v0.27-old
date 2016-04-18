@@ -22,7 +22,7 @@
     "babel-runtime": "^6.6.1",
     "bundle-loader": "^0.5.4",
     "es6-promise": "^3.1.2",
-    "kea-logic": "0.1.4",
+    "kea-logic": "0.2.0",
     "kea-parallel": "^0.1.0",
     "mirror-creator": "^1.1.0",
     "react": "^0.14.7",

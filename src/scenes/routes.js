@@ -1,4 +1,4 @@
-import App from './index'
+import { combineScenesAndRoutes } from 'kea-logic'
 
 const scenes = {
   homepage: require('bundle?lazy&name=homepage!./homepage/scene.js'),
@@ -11,22 +11,4 @@ const routes = {
   '/todos/:visible': 'todos'
 }
 
-function lazyLoad (store, name) {
-  return (location, cb) => {
-    scenes[name](module => {
-      const scene = module.default
-      store.addKeaScene(name, scene)
-      cb(null, scene.component)
-    })
-  }
-}
-
-export default function getRoutes (store) {
-  return {
-    component: App,
-    childRoutes: Object.keys(routes).map(route => ({
-      path: route,
-      getComponent: lazyLoad(store, routes[route])
-    }))
-  }
-}
+export default combineScenesAndRoutes(scenes, routes)
