@@ -15,3 +15,5 @@ npm start
 ```
 
 and then open http://localhost:2000/
+
+... or clone it instead of scaffolding, if that's your cup of tea.
