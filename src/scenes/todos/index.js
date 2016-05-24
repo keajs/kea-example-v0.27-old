@@ -1,66 +1,54 @@
 import './styles.scss'
 
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { selectPropsFromLogic } from 'kea-logic'
+import { connectMapping, propTypesFromMapping } from 'kea-logic'
 
 import Todo from './todo'
 
 import sceneLogic from './logic'
 
 const { SHOW_ALL, SHOW_ACTIVE, SHOW_COMPLETED } = sceneLogic.constants
-const { showAll, showActive, showCompleted, addTodo, toggleAll, clearCompleted } = sceneLogic.actions
 
 const ENTER = 13
 
-const propSelector = selectPropsFromLogic([
-  sceneLogic, [
-    'visibilityFilter',
-    'visibleTodos',
-    'todoCount',
-    'activeTodoCount',
-    'completedTodoCount'
+const mapping = {
+  actions: [
+    sceneLogic, [
+      'showAll',
+      'showActive',
+      'showCompleted',
+      'addTodo',
+      'toggleAll',
+      'clearCompleted'
+    ]
+  ],
+  props: [
+    sceneLogic, [
+      'visibilityFilter',
+      'visibleTodos',
+      'todoCount',
+      'activeTodoCount',
+      'completedTodoCount'
+    ]
   ]
-])
+}
 
 class TodosScene extends Component {
-  static propTypes = {
-    // libs
-    dispatch: React.PropTypes.func.isRequired,
+  static propTypes = propTypesFromMapping(mapping)
 
-    // sceneLogic
-    visibilityFilter: React.PropTypes.string.isRequired,
-    visibleTodos: React.PropTypes.array.isRequired,
-    todoCount: React.PropTypes.number.isRequired,
-    activeTodoCount: React.PropTypes.number.isRequired,
-    completedTodoCount: React.PropTypes.number.isRequired
-  };
-
-  static defaultProps = {
-  };
-
-  constructor (props) {
-    super(props)
-
-    const { dispatch } = props
-
-    this.handleKeyDown = this.handleKeyDown.bind(this)
-
-    this.showAll = () => dispatch(showAll())
-    this.showActive = () => dispatch(showActive())
-    this.showCompleted = () => dispatch(showCompleted())
-    this.toggleAll = (e) => dispatch(toggleAll(e.target.checked))
-    this.clearCompleted = () => dispatch(clearCompleted())
+  handleToggleAll = (e) => {
+    const { toggleAll } = this.props.actions
+    toggleAll(e.target.checked)
   }
 
-  handleKeyDown (e) {
-    const { dispatch } = this.props
+  handleKeyDown = (e) => {
+    const { addTodo } = this.props.actions
 
     if (e.keyCode === ENTER) {
       const node = this.refs.newTodo
 
       if (node.value.trim()) {
-        dispatch(addTodo(node.value.trim()))
+        addTodo(node.value.trim())
         node.value = ''
       }
     }
@@ -68,6 +56,7 @@ class TodosScene extends Component {
 
   render () {
     const { visibilityFilter, visibleTodos, todoCount, activeTodoCount, completedTodoCount } = this.props
+    const { showAll, showActive, showCompleted, clearCompleted } = this.props.actions
 
     return (
       <div className='todo-scene'>
@@ -78,7 +67,7 @@ class TodosScene extends Component {
           </header>
           {todoCount > 0 ? (
             <section className='main'>
-              <input className='toggle-all' type='checkbox' onChange={this.toggleAll} checked={activeTodoCount === 0} />
+              <input className='toggle-all' type='checkbox' onChange={this.handleToggleAll} checked={activeTodoCount === 0} />
               <ul className='todo-list'>
                 {visibleTodos.map(todo => <Todo key={todo.id} todo={todo} />)}
               </ul>
@@ -91,17 +80,17 @@ class TodosScene extends Component {
               </span>
               <ul className='filters'>
                 <li>
-                  <a href='#' onClick={this.showAll} className={visibilityFilter === SHOW_ALL ? 'selected' : ''}>All</a>
+                  <a href='#' onClick={showAll} className={visibilityFilter === SHOW_ALL ? 'selected' : ''}>All</a>
                 </li>
                 <li>
-                  <a href='#' onClick={this.showActive} className={visibilityFilter === SHOW_ACTIVE ? 'selected' : ''}>Active</a>
+                  <a href='#' onClick={showActive} className={visibilityFilter === SHOW_ACTIVE ? 'selected' : ''}>Active</a>
                 </li>
                 <li>
-                  <a href='#' onClick={this.showCompleted} className={visibilityFilter === SHOW_COMPLETED ? 'selected' : ''}>Completed</a>
+                  <a href='#' onClick={showCompleted} className={visibilityFilter === SHOW_COMPLETED ? 'selected' : ''}>Completed</a>
                 </li>
               </ul>
               {completedTodoCount > 0 ? (
-                <button className='clear-completed' onClick={this.clearCompleted}>Clear completed</button>
+                <button className='clear-completed' onClick={clearCompleted}>Clear completed</button>
               ) : null}
             </footer>
           ) : null}
@@ -119,4 +108,4 @@ class TodosScene extends Component {
   }
 }
 
-export default connect(propSelector)(TodosScene)
+export default connectMapping(mapping)(TodosScene)

@@ -1,132 +1,129 @@
-import { combineReducers } from 'redux'
-import { createAction, createReducer } from 'redux-act'
-import { createSelector } from 'reselect'
-import { createLogic, createSelectors } from 'kea-logic'
+import { PropTypes } from 'react'
+import { createAction } from 'redux-act'
+import Logic, { createMapping } from 'kea-logic'
 import mirrorCreator from 'mirror-creator'
 
 import createUuid from '~/utils/create-uuid'
 
-export const path = ['scenes', 'todos', 'index']
+class TodosLogic extends Logic {
+  constructor () {
+    super()
+    this.init()
+  }
 
-// CONSTANTS
-export const constants = mirrorCreator([
-  'SHOW_ALL',
-  'SHOW_ACTIVE',
-  'SHOW_COMPLETED'
-])
+  // PATH
+  path = () => ['scenes', 'todos', 'index']
 
-// ACTIONS
-export const actions = {
-  // tab
-  showAll: createAction('show all todos'),
-  showActive: createAction('show active todos'),
-  showCompleted: createAction('show completed todos'),
+  // CONSTANTS
+  constants = () => mirrorCreator([
+    'SHOW_ALL',
+    'SHOW_ACTIVE',
+    'SHOW_COMPLETED'
+  ])
 
-  // todos
-  addTodo: createAction('add todo', todo => ({ todo })),
-  removeTodo: createAction('remove todo', id => ({ id })),
-  completeTodo: createAction('complete todo', id => ({ id })),
-  unCompleteTodo: createAction('complete todo', id => ({ id })),
-  renameTodo: createAction('rename todo', (id, todo) => ({ id, todo })),
-  toggleAll: createAction('toggle all todos', (completed) => ({ completed })),
-  clearCompleted: createAction('clear completed todos')
+  // ACTIONS
+  actions = ({ constants }) => ({
+    // tab
+    showAll: createAction('show all todos', () => {}),
+    showActive: createAction('show active todos', () => {}),
+    showCompleted: createAction('show completed todos', () => {}),
+
+    // todos
+    addTodo: createAction('add todo', todo => ({ todo })),
+    removeTodo: createAction('remove todo', id => ({ id })),
+    completeTodo: createAction('complete todo', id => ({ id })),
+    unCompleteTodo: createAction('complete todo', id => ({ id })),
+    renameTodo: createAction('rename todo', (id, todo) => ({ id, todo })),
+    toggleAll: createAction('toggle all todos', (completed) => ({ completed })),
+    clearCompleted: createAction('clear completed todos', () => {})
+  })
+
+  // STRUCTURE
+  structure = ({ actions, constants }) => ({
+    visibilityFilter: createMapping({
+      [actions.showAll]: () => constants.SHOW_ALL,
+      [actions.showActive]: () => constants.SHOW_ACTIVE,
+      [actions.showCompleted]: () => constants.SHOW_COMPLETED
+    }, constants.SHOW_ALL, PropTypes.string),
+
+    todos: createMapping({
+      [actions.addTodo]: (state, payload) => do {
+        state.concat([{ id: createUuid(), todo: payload.todo, completed: false }])
+      },
+      [actions.removeTodo]: (state, payload) => do {
+        state.filter(todo => todo.id !== payload.id)
+      },
+      [actions.completeTodo]: (state, payload) => do {
+        state.map(todo => do {
+          if (todo.id === payload.id) {
+            Object.assign({}, todo, { completed: true })
+          } else {
+            todo
+          }
+        })
+      },
+      [actions.unCompleteTodo]: (state, payload) => do {
+        state.map(todo => do {
+          if (todo.id === payload.id) {
+            Object.assign({}, todo, { completed: false })
+          } else {
+            todo
+          }
+        })
+      },
+      [actions.renameTodo]: (state, payload) => do {
+        state.map(todo => do {
+          if (todo.id === payload.id) {
+            Object.assign({}, todo, { todo: payload.todo })
+          } else {
+            todo
+          }
+        })
+      },
+      [actions.toggleAll]: (state, payload) => do {
+        state.map(todo => do {
+          Object.assign({}, todo, { completed: payload.completed })
+        })
+      },
+      [actions.clearCompleted]: (state, payload) => do {
+        state.filter(todo => !todo.completed)
+      }
+    }, [], PropTypes.array)
+  })
+
+  // SELECTORS (data from reducer + more)
+  selectors = ({ path, structure, constants, selectors, addSelector }) => {
+    addSelector('visibleTodos', PropTypes.array, [
+      selectors.visibilityFilter,
+      selectors.todos
+    ], (visibilityFilter, todos) => do {
+      if (visibilityFilter === constants.SHOW_ALL) {
+        todos
+      } else if (visibilityFilter === constants.SHOW_ACTIVE) {
+        todos.filter(todo => !todo.completed)
+      } else if (visibilityFilter === constants.SHOW_COMPLETED) {
+        todos.filter(todo => todo.completed)
+      }
+    })
+
+    addSelector('todoCount', PropTypes.number, [
+      selectors.todos
+    ], (todos) => do {
+      todos.length
+    })
+
+    addSelector('activeTodoCount', PropTypes.number, [
+      selectors.todos
+    ], (todos) => do {
+      todos.filter(todo => !todo.completed).length
+    })
+
+    addSelector('completedTodoCount', PropTypes.number, [
+      selectors.todos
+    ], (todos) => do {
+      todos.filter(todo => todo.completed).length
+    })
+  }
 }
 
-// REDUCER
-export const reducer = combineReducers({
-  visibilityFilter: createReducer({
-    [actions.showAll]: () => constants.SHOW_ALL,
-    [actions.showActive]: () => constants.SHOW_ACTIVE,
-    [actions.showCompleted]: () => constants.SHOW_COMPLETED
-  }, constants.SHOW_ALL),
-
-  todos: createReducer({
-    [actions.addTodo]: (state, payload) => {
-      return state.concat([{ id: createUuid(), todo: payload.todo, completed: false }])
-    },
-    [actions.removeTodo]: (state, payload) => {
-      return state.filter(todo => todo.id !== payload.id)
-    },
-    [actions.completeTodo]: (state, payload) => {
-      return state.map(todo => {
-        if (todo.id === payload.id) {
-          return Object.assign({}, todo, { completed: true })
-        } else {
-          return todo
-        }
-      })
-    },
-    [actions.unCompleteTodo]: (state, payload) => {
-      return state.map(todo => {
-        if (todo.id === payload.id) {
-          return Object.assign({}, todo, { completed: false })
-        } else {
-          return todo
-        }
-      })
-    },
-    [actions.renameTodo]: (state, payload) => {
-      return state.map(todo => {
-        if (todo.id === payload.id) {
-          return Object.assign({}, todo, { todo: payload.todo })
-        } else {
-          return todo
-        }
-      })
-    },
-    [actions.toggleAll]: (state, payload) => {
-      return state.map(todo => {
-        return Object.assign({}, todo, { completed: payload.completed })
-      })
-    },
-    [actions.clearCompleted]: (state, payload) => {
-      return state.filter(todo => !todo.completed)
-    }
-  }, [])
-})
-
-// SELECTORS
-export const selectors = createSelectors(path, reducer)
-
-selectors.visibleTodos = createSelector(
-  selectors.visibilityFilter,
-  selectors.todos,
-  (visibilityFilter, todos) => {
-    if (visibilityFilter === constants.SHOW_ALL) {
-      return todos
-    } else if (visibilityFilter === constants.SHOW_ACTIVE) {
-      return todos.filter(todo => !todo.completed)
-    } else if (visibilityFilter === constants.SHOW_COMPLETED) {
-      return todos.filter(todo => todo.completed)
-    }
-  }
-)
-
-selectors.todoCount = createSelector(
-  selectors.todos,
-  (todos) => {
-    return todos.length
-  }
-)
-
-selectors.activeTodoCount = createSelector(
-  selectors.todos,
-  (todos) => {
-    return todos.filter(todo => !todo.completed).length
-  }
-)
-
-selectors.completedTodoCount = createSelector(
-  selectors.todos,
-  (todos) => {
-    return todos.filter(todo => todo.completed).length
-  }
-)
-
-export default createLogic({
-  path,
-  constants,
-  actions,
-  reducer,
-  selectors
-})
+export default new TodosLogic()
