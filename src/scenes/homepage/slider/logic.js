@@ -1,15 +1,7 @@
-import { combineReducers } from 'redux'
-import { createAction, createReducer } from 'redux-act'
-import { createSelector } from 'reselect'
-import { createLogic, createSelectors } from 'kea-logic'
-// import mirrorCreator from 'mirror-creator'
+import { PropTypes } from 'react'
+import { createAction } from 'redux-act'
+import Logic, { createMapping } from 'kea-logic'
 
-export const path = ['scenes', 'homepage', 'slider']
-
-// CONSTANTS
-// export const constants = mirrorCreator([
-// ])
-//
 export const images = [
   {
     src: require('./_assets/kea1.jpg'),
@@ -28,36 +20,44 @@ export const images = [
   }
 ]
 
-// ACTIONS
-export const actions = {
-  updateSlide: createAction('change to slide with index', (index) => ({ index }))
+class SliderLogic extends Logic {
+  constructor () {
+    super()
+    this.init()
+  }
+
+  // PATH
+  path = () => ['scenes', 'homepage', 'slider']
+
+  // CONSTANTS
+  // constants = () => mirrorCreator([
+  // ])
+  //
+
+  // ACTIONS
+  actions = ({ constants }) => ({
+    updateSlide: createAction('change to slide with index', (index) => ({ index }))
+  })
+
+  // REDUCER
+  structure = ({ actions, constants }) => ({
+    currentSlide: createMapping({
+      [actions.updateSlide]: (state, payload) => {
+        return payload.index % images.length
+      }
+    }, 1, PropTypes.number)
+  })
+
+  // SELECTORS (data from reducer + more)
+  selectors = ({ path, structure, constants, selectors, addSelector }) => {
+    addSelector('currentImage', PropTypes.object, [
+      selectors.currentSlide
+    ], (currentSlide) => {
+      return images[currentSlide]
+    })
+
+    addSelector('imageCount', PropTypes.number, [], () => images.length)
+  }
 }
 
-// REDUCER
-export const reducer = combineReducers({
-  currentSlide: createReducer({
-    [actions.updateSlide]: (state, payload) => {
-      return payload.index % images.length
-    }
-  }, 1)
-})
-
-// SELECTORS
-export const selectors = createSelectors(path, reducer)
-
-selectors.currentImage = createSelector(
-  selectors.currentSlide,
-  (currentSlide) => {
-    return images[currentSlide]
-  }
-)
-
-selectors.imageCount = () => images.length
-
-export default createLogic({
-  path,
-  // constants,
-  actions,
-  reducer,
-  selectors
-})
+export default new SliderLogic()

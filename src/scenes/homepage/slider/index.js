@@ -1,39 +1,33 @@
 import './styles.scss'
 
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { selectPropsFromLogic } from 'kea-logic'
+import { connectMapping, propTypesFromMapping } from 'kea-logic'
 
 import range from '~/utils/range'
 
 import sliderLogic from './logic'
 
-const { updateSlide } = sliderLogic.actions
-
-const propSelector = selectPropsFromLogic([
-  sliderLogic, [
-    'currentSlide',
-    'currentImage',
-    'imageCount'
+const mapping = {
+  actions: [
+    sliderLogic, [
+      'updateSlide'
+    ]
+  ],
+  props: [
+    sliderLogic, [
+      'currentSlide',
+      'currentImage',
+      'imageCount'
+    ]
   ]
-])
+}
 
 class Slider extends Component {
-  static propTypes = {
-    // libs
-    dispatch: React.PropTypes.func.isRequired,
-
-    // sceneLogic
-    currentSlide: React.PropTypes.number.isRequired,
-    currentImage: React.PropTypes.object.isRequired,
-    imageCount: React.PropTypes.number.isRequired
-  };
-
-  static defaultProps = {
-  };
+  static propTypes = propTypesFromMapping(mapping)
 
   render () {
-    const { dispatch, currentSlide, currentImage, imageCount } = this.props
+    const { currentSlide, currentImage, imageCount } = this.props
+    const { updateSlide } = this.props.actions
 
     const title = `Image copyright by ${currentImage.author}`
 
@@ -42,7 +36,7 @@ class Slider extends Component {
         <img src={currentImage.src} alt={title} title={title} />
         <div className='buttons'>
           {range(imageCount).map(i => (
-            <a key={i} href='#' className={i === currentSlide ? 'selected' : ''} onClick={() => dispatch(updateSlide(i))}></a>
+            <a key={i} href='#' className={i === currentSlide ? 'selected' : ''} onClick={() => updateSlide(i)}></a>
           ))}
         </div>
       </div>
@@ -50,4 +44,4 @@ class Slider extends Component {
   }
 }
 
-export default connect(propSelector)(Slider)
+export default connectMapping(mapping)(Slider)

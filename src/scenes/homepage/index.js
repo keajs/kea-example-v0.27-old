@@ -1,55 +1,42 @@
 import './styles.scss'
 
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { selectPropsFromLogic } from 'kea-logic'
+import { connectMapping, propTypesFromMapping } from 'kea-logic'
 
 import Slider from './slider'
 
 import sceneLogic from './logic'
 import sliderLogic from './slider/logic'
 
-const { updateName } = sceneLogic.actions
-
-const propSelector = selectPropsFromLogic([
-  sceneLogic, [
-    'name',
-    'capitalizedName'
+const mapping = {
+  actions: [
+    sceneLogic, [
+      'updateName'
+    ]
   ],
-  sliderLogic, [
-    'currentSlide',
-    'currentImage'
+  props: [
+    sceneLogic, [
+      'name',
+      'capitalizedName'
+    ],
+    sliderLogic, [
+      'currentSlide',
+      'currentImage'
+    ]
   ]
-])
+}
 
 class HomepageScene extends Component {
-  static propTypes = {
-    // libs
-    dispatch: React.PropTypes.func.isRequired,
+  static propTypes = propTypesFromMapping(mapping)
 
-    // sceneLogic
-    name: React.PropTypes.string.isRequired,
-    capitalizedName: React.PropTypes.string.isRequired,
-    currentSlide: React.PropTypes.number.isRequired,
-    currentImage: React.PropTypes.object.isRequired
-  };
-
-  static defaultProps = {
-  };
-
-  constructor (props) {
-    super(props)
-
-    this.updateName = this.updateName.bind(this)
-  }
-
-  updateName () {
-    const { dispatch, name } = this.props
+  updateName = () => {
+    const { name } = this.props
+    const { updateName } = this.props.actions
 
     const newName = window.prompt('Please enter the name', name)
 
     if (newName) {
-      dispatch(updateName(newName))
+      updateName(newName)
     }
   }
 
@@ -70,4 +57,4 @@ class HomepageScene extends Component {
   }
 }
 
-export default connect(propSelector)(HomepageScene)
+export default connectMapping(mapping)(HomepageScene)
