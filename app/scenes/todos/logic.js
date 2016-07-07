@@ -83,7 +83,7 @@ class TodosLogic extends Logic {
       [actions.clearCompleted]: (state, payload) => do {
         state.filter(todo => !todo.completed)
       }
-    }, [], PropTypes.array)
+    }, [], PropTypes.array, { persist: true })
   })
 
   // SELECTORS (data from reducer + more)
