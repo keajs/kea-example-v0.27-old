@@ -6,7 +6,7 @@ const isProd = nodeEnv === 'production'
 
 var config = {
   devtool: isProd ? 'hidden-source-map' : 'cheap-eval-source-map',
-  context: path.join(__dirname, './src'),
+  context: path.join(__dirname, './app'),
   entry: {
     common: [
       'babel-polyfill', 'react',
@@ -74,11 +74,11 @@ var config = {
   resolve: {
     extensions: ['', '.js', '.jsx'],
     modules: [
-      path.resolve('./src'),
+      path.resolve('./app'),
       'node_modules'
     ],
     alias: {
-      '~': path.join(__dirname, './src')
+      '~': path.join(__dirname, './app')
     }
   },
   plugins: [
@@ -101,7 +101,7 @@ var config = {
     })
   ],
   devServer: {
-    contentBase: './src'
+    contentBase: './app'
     // hot: true
   }
 }
