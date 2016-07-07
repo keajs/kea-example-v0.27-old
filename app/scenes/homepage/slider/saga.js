@@ -1,14 +1,20 @@
 import { SagaCancellationException } from 'redux-saga'
-
 import { take, race, put } from 'redux-saga/effects'
-
-import sliderLogic from './logic'
+import { selectActionsFromLogic } from 'kea-logic'
 
 import delay from '~/utils/delay'
 
-const { updateSlide } = sliderLogic.actions
+import sliderLogic from '~/scenes/homepage/slider/logic'
+
+const actions = selectActionsFromLogic([
+  sliderLogic, [
+    'updateSlide'
+  ]
+])
 
 export default function * saga () {
+  const { updateSlide } = actions
+
   console.log('Starting homepage slider saga')
 
   try {

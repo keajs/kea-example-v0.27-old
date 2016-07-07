@@ -6,11 +6,6 @@ import mirrorCreator from 'mirror-creator'
 import createUuid from '~/utils/create-uuid'
 
 class TodosLogic extends Logic {
-  constructor () {
-    super()
-    this.init()
-  }
-
   // PATH
   path = () => ['scenes', 'todos', 'index']
 
@@ -126,4 +121,4 @@ class TodosLogic extends Logic {
   }
 }
 
-export default new TodosLogic()
+export default new TodosLogic().init()

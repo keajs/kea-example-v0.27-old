@@ -5,11 +5,6 @@ import Logic, { createMapping } from 'kea-logic'
 // import mirrorCreator from 'mirror-creator'
 
 class SceneLogic extends Logic {
-  constructor () {
-    super()
-    this.init()
-  }
-
   // PATH
   path = () => ['scenes', 'homepage', 'index']
 
@@ -23,7 +18,7 @@ class SceneLogic extends Logic {
     updateName: createAction('change the name of the bird', (name) => ({ name }))
   })
 
-  // REDUCER
+  // STRUCTURE
   structure = ({ actions, constants }) => ({
     name: createMapping({
       [actions.updateName]: (state, payload) => {
@@ -42,4 +37,4 @@ class SceneLogic extends Logic {
   }
 }
 
-export default new SceneLogic()
+export default new SceneLogic().init()

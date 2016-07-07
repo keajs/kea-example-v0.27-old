@@ -21,7 +21,7 @@
   "dependencies": {
     "babel-runtime": "^6.9.0",
     "es6-promise": "^3.2.1",
-    "kea-logic": "0.7.0",
+    "kea-logic": "0.8.0",
     "kea-parallel": "^0.1.0",
     "mirror-creator": "^1.1.0",
     "react": "^15.1.0",

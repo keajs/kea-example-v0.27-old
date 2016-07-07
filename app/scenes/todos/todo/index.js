@@ -1,47 +1,39 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import { connectMapping, propTypesFromMapping } from 'kea-logic'
 
 import sceneLogic from '~/scenes/todos/logic'
-
-const { renameTodo, removeTodo, completeTodo, unCompleteTodo } = sceneLogic.actions
 
 const ESCAPE = 27
 const ENTER = 13
 
+const mapping = {
+  actions: [
+    sceneLogic, [
+      'renameTodo',
+      'removeTodo',
+      'completeTodo',
+      'unCompleteTodo'
+    ]
+  ]
+  // no extra props needed
+  // props: [
+  //   sceneLogic, [
+  //   ]
+  // ]
+}
+
 class Todo extends Component {
-  static propTypes = {
-    // libs
-    dispatch: React.PropTypes.func.isRequired,
-
-    // props
+  static propTypes = propTypesFromMapping(mapping, {
     todo: React.PropTypes.object.isRequired
-  };
-
-  static defaultProps = {
-  };
+  })
 
   constructor (props) {
     super(props)
-
-    const { dispatch } = props
 
     this.state = {
       editing: false,
       editValue: ''
     }
-
-    this.renameTodo = (value) => dispatch(renameTodo(this.props.todo.id, value))
-    this.removeTodo = () => dispatch(removeTodo(this.props.todo.id))
-    this.completeTodo = () => dispatch(completeTodo(this.props.todo.id))
-    this.unCompleteTodo = () => dispatch(unCompleteTodo(this.props.todo.id))
-
-    this.setEditing = () => this.setState({ editing: true, editValue: this.props.todo.todo })
-    this.clearEditing = () => this.setState({ editing: false, editValue: '' })
-    this.updateEditValue = () => this.setState({ editValue: this.refs.editField.value })
-
-    this.onKeyDown = this.onKeyDown.bind(this)
-    this.saveTodo = this.saveTodo.bind(this)
-    this.cancelTodo = this.cancelTodo.bind(this)
   }
 
   componentDidUpdate (prevProps, prevState) {
@@ -52,7 +44,39 @@ class Todo extends Component {
     }
   }
 
-  onKeyDown (e) {
+  renameTodo = (value) => {
+    const { renameTodo } = this.props.actions
+    renameTodo(this.props.todo.id, value)
+  }
+
+  removeTodo = () => {
+    const { removeTodo } = this.props.actions
+    removeTodo(this.props.todo.id)
+  }
+
+  completeTodo = () => {
+    const { completeTodo } = this.props.actions
+    completeTodo(this.props.todo.id)
+  }
+
+  unCompleteTodo = () => {
+    const { unCompleteTodo } = this.props.actions
+    unCompleteTodo(this.props.todo.id)
+  }
+
+  setEditing = () => {
+    this.setState({ editing: true, editValue: this.props.todo.todo })
+  }
+
+  clearEditing = () => {
+    this.setState({ editing: false, editValue: '' })
+  }
+
+  updateEditValue = () => {
+    this.setState({ editValue: this.refs.editField.value })
+  }
+
+  onKeyDown = (e) => {
     if (e.keyCode === ESCAPE) {
       this.cancelTodo()
     } else if (e.keyCode === ENTER) {
@@ -60,7 +84,7 @@ class Todo extends Component {
     }
   }
 
-  saveTodo () {
+  saveTodo = () => {
     const { value } = this.refs.editField
 
     if (value.trim()) {
@@ -71,7 +95,7 @@ class Todo extends Component {
     }
   }
 
-  cancelTodo () {
+  cancelTodo = () => {
     this.clearEditing()
   }
 
@@ -97,4 +121,4 @@ class Todo extends Component {
   }
 }
 
-export default connect()(Todo)
+export default connectMapping(mapping)(Todo)

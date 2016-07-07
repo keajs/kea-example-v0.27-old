@@ -21,11 +21,6 @@ export const images = [
 ]
 
 class SliderLogic extends Logic {
-  constructor () {
-    super()
-    this.init()
-  }
-
   // PATH
   path = () => ['scenes', 'homepage', 'slider']
 
@@ -60,4 +55,4 @@ class SliderLogic extends Logic {
   }
 }
 
-export default new SliderLogic()
+export default new SliderLogic().init()
