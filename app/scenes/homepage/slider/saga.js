@@ -1,5 +1,4 @@
-import { SagaCancellationException } from 'redux-saga'
-import { take, race, put } from 'redux-saga/effects'
+import { take, race, put, cancelled } from 'redux-saga/effects'
 import { selectActionsFromLogic } from 'kea-logic'
 
 import delay from '~/utils/delay'
@@ -30,13 +29,9 @@ export default function * saga () {
         yield put(updateSlide(currentSlide + 1))
       }
     }
-  } catch (error) {
-    if (error instanceof SagaCancellationException) {
-      // saga cancelled, do cleanup
+  } finally {
+    if (yield cancelled()) {
       console.log('Stopping homepage slider saga')
-    } else {
-      // some other error
-      console.error(error)
     }
   }
 }

@@ -14,10 +14,10 @@ export default function * saga () {
       console.log(count)
     }
   } finally {
+    // saga cancelled, do cleanup
     if (yield cancelled()) {
       console.log('Stopping homepage saga')
       console.log(`got to ${count}`)
-      // saga cancelled, do cleanup
     }
   }
 }
