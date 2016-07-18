@@ -1,4 +1,4 @@
-import { SagaCancellationException } from 'redux-saga'
+import { cancelled } from 'redux-saga/effects'
 
 const delay = (ms, val = true) => new Promise((resolve) => setTimeout(() => resolve(val), ms))
 
@@ -13,14 +13,11 @@ export default function * saga () {
       count += 1
       console.log(count)
     }
-  } catch (error) {
-    if (error instanceof SagaCancellationException) {
+  } finally {
+    if (yield cancelled()) {
       console.log('Stopping homepage saga')
       console.log(`got to ${count}`)
       // saga cancelled, do cleanup
-    } else {
-      // some other error
-      console.error(error)
     }
   }
 }

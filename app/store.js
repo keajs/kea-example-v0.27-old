@@ -1,9 +1,8 @@
 /* global window */
 
 import { createStore, applyMiddleware, compose } from 'redux'
-import { routerReducer } from 'react-router-redux'
+import { routerReducer, routerMiddleware } from 'react-router-redux'
 import createSagaMiddleware from 'redux-saga'
-import { routerMiddleware } from 'react-router-redux'
 import { browserHistory } from 'react-router'
 import { createRootSaga, createKeaStore } from 'kea-logic'
 
@@ -14,12 +13,14 @@ const appReducers = {
   routing: routerReducer
 }
 
+const sagaMiddleware = createSagaMiddleware()
 const finalCreateStore = compose(
-  applyMiddleware(createSagaMiddleware(createRootSaga(appSaga))),
+  applyMiddleware(sagaMiddleware),
   applyMiddleware(routerMiddleware(browserHistory)),
   window.devToolsExtension ? window.devToolsExtension() : f => f
 )(createStore)
 
 const store = createKeaStore(finalCreateStore, appReducers)
+sagaMiddleware.run(createRootSaga(appSaga))
 
 export default store
