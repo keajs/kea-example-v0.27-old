@@ -1,6 +1,5 @@
 import { SagaCancellationException } from 'redux-saga'
 
-// import { runInParallel } from 'kea-parallel'
 const delay = (ms, val = true) => new Promise((resolve) => setTimeout(() => resolve(val), ms))
 
 export default function * saga () {

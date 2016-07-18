@@ -50,14 +50,6 @@ var config = {
         ]
       },
       {
-        test: /\-worker\.js$/,
-        exclude: /node_modules/,
-        loaders: [
-          'worker',
-          'kea-parallel'
-        ]
-      },
-      {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         loaders: (isProd ? [] : ['react-hot']).concat([
