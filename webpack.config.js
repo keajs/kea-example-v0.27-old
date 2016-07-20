@@ -35,18 +35,11 @@ var config = {
         }
       },
       {
-        test: /\.css$/,
-        loaders: [
-          'style',
-          'css'
-        ]
-      },
-      {
-        test: /\.scss$/,
+        test: /\.s?css$/,
         loaders: [
           'style',
           'css',
-          'sass'
+          'postcss'
         ]
       },
       {
@@ -73,8 +66,11 @@ var config = {
       '~': path.join(__dirname, './app')
     }
   },
+  postcss: function () {
+    return [require('autoprefixer'), require('precss')];
+  },
   plugins: [
-    new webpack.optimize.CommonsChunkPlugin({
+     new webpack.optimize.CommonsChunkPlugin({ 
       name: 'common',
       minChunks: 2,
       filename: 'common.bundle.js'
