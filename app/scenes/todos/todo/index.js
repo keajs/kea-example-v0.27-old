@@ -12,7 +12,10 @@ const mapping = {
       'renameTodo',
       'removeTodo',
       'completeTodo',
-      'unCompleteTodo'
+      'unCompleteTodo',
+      'setEditing',
+      'updateEditValue',
+      'clearEditing'
     ]
   ]
   // no extra props needed
@@ -27,17 +30,8 @@ class Todo extends Component {
     todo: React.PropTypes.object.isRequired
   })
 
-  constructor (props) {
-    super(props)
-
-    this.state = {
-      editing: false,
-      editValue: ''
-    }
-  }
-
-  componentDidUpdate (prevProps, prevState) {
-    if (this.state.editing && !prevState.editing) {
+  componentDidUpdate (prevProps) {
+    if (this.props.todo.editing && !prevProps.todo.editing) {
       const node = this.refs.editField
       node.focus()
       node.setSelectionRange(node.value.length, node.value.length)
@@ -65,15 +59,18 @@ class Todo extends Component {
   }
 
   setEditing = () => {
-    this.setState({ editing: true, editValue: this.props.todo.todo })
+    const { setEditing } = this.props.actions
+    setEditing(this.props.todo.id)
   }
 
   clearEditing = () => {
-    this.setState({ editing: false, editValue: '' })
+    const { clearEditing } = this.props.actions
+    clearEditing(this.props.todo.id)
   }
 
   updateEditValue = () => {
-    this.setState({ editValue: this.refs.editField.value })
+    const { updateEditValue } = this.props.actions
+    updateEditValue(this.props.todo.id, this.refs.editField.value)
   }
 
   onKeyDown = (e) => {
@@ -101,7 +98,7 @@ class Todo extends Component {
 
   render () {
     const { todo } = this.props
-    const { editing, editValue } = this.state
+    const { editing, editValue } = todo
 
     return (
       editing ? (
@@ -112,7 +109,7 @@ class Todo extends Component {
         <li className={todo.completed ? 'completed' : ''}>
           <div className='view'>
             <input className='toggle' checked={todo.completed} type='checkbox' onChange={todo.completed ? this.unCompleteTodo : this.completeTodo} />
-            <label onDoubleClick={this.setEditing}>{todo.todo}</label>
+            <label onTouchEnd={this.setEditing} onDoubleClick={this.setEditing}>{todo.todo}</label>
             <button className='destroy' onClick={this.removeTodo}></button>
           </div>
         </li>

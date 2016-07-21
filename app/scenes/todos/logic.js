@@ -29,6 +29,9 @@ class TodosLogic extends Logic {
     completeTodo: createAction('complete todo', id => ({ id })),
     unCompleteTodo: createAction('complete todo', id => ({ id })),
     renameTodo: createAction('rename todo', (id, todo) => ({ id, todo })),
+    setEditing: createAction('set as editing', (id) => ({ id })),
+    updateEditValue: createAction('update edit value', (id, value) => ({ id, value })),
+    clearEditing: createAction('unset editing', (id) => ({ id })),
     toggleAll: createAction('toggle all todos', (completed) => ({ completed })),
     clearCompleted: createAction('clear completed todos', () => {})
   })
@@ -43,7 +46,7 @@ class TodosLogic extends Logic {
 
     todos: createMapping({
       [actions.addTodo]: (state, payload) => do {
-        state.concat([{ id: createUuid(), todo: payload.todo, completed: false }])
+        state.concat([{ id: createUuid(), todo: payload.todo, completed: false, editing: false }])
       },
       [actions.removeTodo]: (state, payload) => do {
         state.filter(todo => todo.id !== payload.id)
@@ -82,6 +85,24 @@ class TodosLogic extends Logic {
       },
       [actions.clearCompleted]: (state, payload) => do {
         state.filter(todo => !todo.completed)
+      },
+      [actions.setEditing]: (state, payload) => do {
+        state.map(todo => todo.id === payload.id
+          ? Object.assign({}, todo, { editing: true, editValue: todo.todo })
+          : todo
+        )
+      },
+      [actions.updateEditValue]: (state, payload) => do {
+        state.map(todo => todo.id === payload.id
+          ? Object.assign({}, todo, { editValue: payload.value })
+          : todo
+        )
+      },
+      [actions.clearEditing]: (state, payload) => do {
+        state.map(todo => todo.id === payload.id
+          ? Object.assign({}, todo, { editing: false, editValue: null })
+          : todo
+        )
       }
     }, [], PropTypes.array, { persist: true })
   })

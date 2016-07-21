@@ -7,7 +7,11 @@ import Todo from './todo'
 
 import sceneLogic from './logic'
 
-const { SHOW_ALL, SHOW_ACTIVE, SHOW_COMPLETED } = sceneLogic.constants
+const { 
+  SHOW_ALL,
+  SHOW_ACTIVE,
+  SHOW_COMPLETED 
+} = sceneLogic.constants
 
 const ENTER = 13
 
@@ -69,6 +73,7 @@ class TodosScene extends Component {
             <section className='main'>
               <input className='toggle-all' type='checkbox' onChange={this.handleToggleAll} checked={activeTodoCount === 0} />
               <ul className='todo-list'>
+
                 {visibleTodos.map(todo => <Todo key={todo.id} todo={todo} />)}
               </ul>
             </section>
