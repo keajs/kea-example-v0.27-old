@@ -109,7 +109,7 @@ class Todo extends Component {
         <li className={todo.completed ? 'completed' : ''}>
           <div className='view'>
             <input className='toggle' checked={todo.completed} type='checkbox' onChange={todo.completed ? this.unCompleteTodo : this.completeTodo} />
-            <label onTouchEnd={this.setEditing} onDoubleClick={this.setEditing}>{todo.todo}</label>
+            <label onTouchEnd={this.setEditing} onDoubleClick={this.setEditing}>{todo.value}</label>
             <button className='destroy' onClick={this.removeTodo}></button>
           </div>
         </li>

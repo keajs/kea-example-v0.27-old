@@ -24,11 +24,11 @@ class TodosLogic extends Logic {
     showCompleted: createAction('show completed todos', () => {}),
 
     // todos
-    addTodo: createAction('add todo', todo => ({ todo })),
+    addTodo: createAction('add todo', value => ({ value })),
     removeTodo: createAction('remove todo', id => ({ id })),
     completeTodo: createAction('complete todo', id => ({ id })),
     unCompleteTodo: createAction('complete todo', id => ({ id })),
-    renameTodo: createAction('rename todo', (id, todo) => ({ id, todo })),
+    renameTodo: createAction('rename todo', (id, value) => ({ id, value })),
     setEditing: createAction('set as editing', (id) => ({ id })),
     updateEditValue: createAction('update edit value', (id, value) => ({ id, value })),
     clearEditing: createAction('unset editing', (id) => ({ id })),
@@ -46,65 +46,98 @@ class TodosLogic extends Logic {
 
     todos: createMapping({
       [actions.addTodo]: (state, payload) => do {
-        state.concat([{ id: createUuid(), todo: payload.todo, completed: false, editing: false }])
+        const { value } = payload
+        const id = createUuid()
+        const todo = {
+          id,
+          createdAt: new Date().getTime(),
+          value,
+          completed: false,
+          editing: false
+        }
+        Object.assign({}, state, { [id]: todo })
       },
       [actions.removeTodo]: (state, payload) => do {
-        state.filter(todo => todo.id !== payload.id)
+        const { id } = payload
+        const { [id]: dispose, ...rest } = state
+        rest
       },
       [actions.completeTodo]: (state, payload) => do {
-        state.map(todo => do {
-          if (todo.id === payload.id) {
-            Object.assign({}, todo, { completed: true })
-          } else {
-            todo
-          }
+        const { id } = payload
+
+        Object.assign({}, state, {
+          [id]: Object.assign({}, state[id], {
+            completed: true
+          })
         })
       },
       [actions.unCompleteTodo]: (state, payload) => do {
-        state.map(todo => do {
-          if (todo.id === payload.id) {
-            Object.assign({}, todo, { completed: false })
-          } else {
-            todo
-          }
+        const { id } = payload
+
+        Object.assign({}, state, {
+          [id]: Object.assign({}, state[id], {
+            completed: false
+          })
         })
       },
       [actions.renameTodo]: (state, payload) => do {
-        state.map(todo => do {
-          if (todo.id === payload.id) {
-            Object.assign({}, todo, { todo: payload.todo })
-          } else {
-            todo
-          }
+        const { id, value } = payload
+
+        Object.assign({}, state, {
+          [id]: Object.assign({}, state[id], {
+            value
+          })
         })
       },
       [actions.toggleAll]: (state, payload) => do {
-        state.map(todo => do {
-          Object.assign({}, todo, { completed: payload.completed })
+        const { completed } = payload
+        let newState = {}
+        Object.values(state).forEach(todo => {
+          newState[todo.id] = Object.assign({}, todo, {
+            completed
+          })
         })
+        newState
       },
       [actions.clearCompleted]: (state, payload) => do {
-        state.filter(todo => !todo.completed)
+        let newState = {}
+        Object.values(state).forEach(todo => {
+          if (!todo.completed) {
+            newState[todo.id] = todo
+          }
+        })
+        newState
       },
       [actions.setEditing]: (state, payload) => do {
-        state.map(todo => todo.id === payload.id
-          ? Object.assign({}, todo, { editing: true, editValue: todo.todo })
-          : todo
-        )
+        const { id } = payload
+
+        Object.assign({}, state, {
+          [id]: Object.assign({}, state[id], {
+            editing: true,
+            editValue: state[id].value
+          })
+        })
       },
       [actions.updateEditValue]: (state, payload) => do {
-        state.map(todo => todo.id === payload.id
-          ? Object.assign({}, todo, { editValue: payload.value })
-          : todo
-        )
+        const { id, value } = payload
+
+        Object.assign({}, state, {
+          [id]: Object.assign({}, state[id], {
+            editValue: value
+          })
+        })
       },
       [actions.clearEditing]: (state, payload) => do {
-        state.map(todo => todo.id === payload.id
-          ? Object.assign({}, todo, { editing: false, editValue: null })
-          : todo
-        )
+        const { id } = payload
+
+        Object.assign({}, state, {
+          [id]: Object.assign({}, state[id], {
+            editing: false,
+            editValue: null
+          })
+        })
       }
-    }, [], PropTypes.array, { persist: true })
+    }, {}, PropTypes.object, { persist: true })
   })
 
   // SELECTORS (data from reducer + more)
@@ -114,30 +147,30 @@ class TodosLogic extends Logic {
       selectors.todos
     ], (visibilityFilter, todos) => do {
       if (visibilityFilter === constants.SHOW_ALL) {
-        todos
+        Object.values(todos)
       } else if (visibilityFilter === constants.SHOW_ACTIVE) {
-        todos.filter(todo => !todo.completed)
+        Object.values(todos).filter(todo => !todo.completed)
       } else if (visibilityFilter === constants.SHOW_COMPLETED) {
-        todos.filter(todo => todo.completed)
+        Object.values(todos).filter(todo => todo.completed)
       }
     })
 
     addSelector('todoCount', PropTypes.number, [
       selectors.todos
     ], (todos) => do {
-      todos.length
+      Object.keys(todos).length
     })
 
     addSelector('activeTodoCount', PropTypes.number, [
       selectors.todos
     ], (todos) => do {
-      todos.filter(todo => !todo.completed).length
+      Object.values(todos).filter(todo => !todo.completed).length
     })
 
     addSelector('completedTodoCount', PropTypes.number, [
       selectors.todos
     ], (todos) => do {
-      todos.filter(todo => todo.completed).length
+      Object.values(todos).filter(todo => todo.completed).length
     })
   }
 }
