@@ -73,8 +73,7 @@ class TodosScene extends Component {
             <section className='main'>
               <input className='toggle-all' type='checkbox' onChange={this.handleToggleAll} checked={activeTodoCount === 0} />
               <ul className='todo-list'>
-
-                {visibleTodos.map(todo => <Todo key={todo.id} todo={todo} />)}
+                {visibleTodos.map(todo => <Todo key={todo.id} id={todo.id} />)}
               </ul>
             </section>
           ) : null}

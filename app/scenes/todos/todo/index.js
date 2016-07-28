@@ -7,28 +7,29 @@ const ESCAPE = 27
 const ENTER = 13
 
 const mapping = {
+  passedProps: {
+    id: React.PropTypes.string.isRequired
+  },
   actions: [
     sceneLogic, [
-      'renameTodo',
-      'removeTodo',
-      'completeTodo',
-      'unCompleteTodo',
-      'setEditing',
-      'updateEditValue',
-      'clearEditing'
+      'renameTodo(id)',
+      'removeTodo(id)',
+      'completeTodo(id)',
+      'unCompleteTodo(id)',
+      'setEditing(id)',
+      'updateEditValue(id)',
+      'clearEditing(id)'
+    ]
+  ],
+  props: [
+    sceneLogic, [
+      'todos[id] as todo'
     ]
   ]
-  // no extra props needed
-  // props: [
-  //   sceneLogic, [
-  //   ]
-  // ]
 }
 
 class Todo extends Component {
-  static propTypes = propTypesFromMapping(mapping, {
-    todo: React.PropTypes.object.isRequired
-  })
+  static propTypes = propTypesFromMapping(mapping)
 
   componentDidUpdate (prevProps) {
     if (this.props.todo.editing && !prevProps.todo.editing) {
@@ -38,79 +39,62 @@ class Todo extends Component {
     }
   }
 
-  renameTodo = (value) => {
-    const { renameTodo } = this.props.actions
-    renameTodo(this.props.todo.id, value)
-  }
-
-  removeTodo = () => {
-    const { removeTodo } = this.props.actions
-    removeTodo(this.props.todo.id)
-  }
-
-  completeTodo = () => {
-    const { completeTodo } = this.props.actions
-    completeTodo(this.props.todo.id)
-  }
-
-  unCompleteTodo = () => {
-    const { unCompleteTodo } = this.props.actions
-    unCompleteTodo(this.props.todo.id)
-  }
-
-  setEditing = () => {
-    const { setEditing } = this.props.actions
-    setEditing(this.props.todo.id)
-  }
-
-  clearEditing = () => {
-    const { clearEditing } = this.props.actions
-    clearEditing(this.props.todo.id)
-  }
-
   updateEditValue = () => {
     const { updateEditValue } = this.props.actions
-    updateEditValue(this.props.todo.id, this.refs.editField.value)
+    updateEditValue(this.refs.editField.value)
   }
 
   onKeyDown = (e) => {
+    const { clearEditing } = this.props.actions
     if (e.keyCode === ESCAPE) {
-      this.cancelTodo()
+      clearEditing()
     } else if (e.keyCode === ENTER) {
       this.saveTodo()
     }
   }
 
   saveTodo = () => {
+    const { renameTodo, clearEditing, removeTodo } = this.props.actions
     const { value } = this.refs.editField
 
     if (value.trim()) {
-      this.renameTodo(value.trim())
-      this.clearEditing()
+      renameTodo(value.trim())
+      clearEditing()
     } else {
-      this.removeTodo()
+      removeTodo()
     }
-  }
-
-  cancelTodo = () => {
-    this.clearEditing()
   }
 
   render () {
     const { todo } = this.props
-    const { editing, editValue } = todo
+    const { unCompleteTodo,
+            completeTodo,
+            setEditing,
+            removeTodo } = this.props.actions
 
     return (
-      editing ? (
+      todo.editing ? (
         <li className='editing'>
-          <input className='edit' ref='editField' value={editValue} onKeyDown={this.onKeyDown} onChange={this.updateEditValue} onBlur={this.saveTodo} />
+          <input className='edit'
+                 ref='editField'
+                 value={todo.editValue}
+                 onKeyDown={this.onKeyDown}
+                 onChange={this.updateEditValue}
+                 onBlur={this.saveTodo} />
         </li>
       ) : (
         <li className={todo.completed ? 'completed' : ''}>
           <div className='view'>
-            <input className='toggle' checked={todo.completed} type='checkbox' onChange={todo.completed ? this.unCompleteTodo : this.completeTodo} />
-            <label onTouchEnd={this.setEditing} onDoubleClick={this.setEditing}>{todo.value}</label>
-            <button className='destroy' onClick={this.removeTodo}></button>
+            <input className='toggle'
+                   checked={todo.completed}
+                   type='checkbox'
+                   onChange={todo.completed ? unCompleteTodo : completeTodo} />
+            <label onTouchEnd={setEditing}
+                   onDoubleClick={setEditing}>
+              {todo.value}
+            </label>
+            <button className='destroy'
+                    onClick={removeTodo} />
           </div>
         </li>
       )
