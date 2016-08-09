@@ -45,97 +45,111 @@ class TodosLogic extends Logic {
     }, constants.SHOW_ALL, PropTypes.string),
 
     todos: createMapping({
-      [actions.addTodo]: (state, payload) => do {
+      [actions.addTodo]: (state, payload) => {
         const { value } = payload
         const id = createUuid()
-        const todo = {
-          id,
-          createdAt: new Date().getTime(),
-          value,
-          completed: false,
-          editing: false
+
+        return {
+          ...state,
+          [id]: {
+            id,
+            createdAt: new Date().getTime(),
+            value,
+            completed: false,
+            editing: false
+          }
         }
-        Object.assign({}, state, { [id]: todo })
       },
-      [actions.removeTodo]: (state, payload) => do {
+      [actions.removeTodo]: (state, payload) => {
         const { id } = payload
         const { [id]: dispose, ...rest } = state
-        rest
+        return rest
       },
-      [actions.completeTodo]: (state, payload) => do {
+      [actions.completeTodo]: (state, payload) => {
         const { id } = payload
 
-        Object.assign({}, state, {
-          [id]: Object.assign({}, state[id], {
+        return {
+          ...state,
+          [id]: {
+            ...state[id],
             completed: true
-          })
-        })
+          }
+        }
       },
-      [actions.unCompleteTodo]: (state, payload) => do {
+      [actions.unCompleteTodo]: (state, payload) => {
         const { id } = payload
 
-        Object.assign({}, state, {
-          [id]: Object.assign({}, state[id], {
+        return {
+          ...state,
+          [id]: {
+            ...state[id],
             completed: false
-          })
-        })
+          }
+        }
       },
-      [actions.renameTodo]: (state, payload) => do {
+      [actions.renameTodo]: (state, payload) => {
         const { id, value } = payload
 
-        Object.assign({}, state, {
-          [id]: Object.assign({}, state[id], {
+        return {
+          ...state,
+          [id]: {
+            ...state[id],
             value
-          })
-        })
+          }
+        }
       },
-      [actions.toggleAll]: (state, payload) => do {
+      [actions.toggleAll]: (state, payload) => {
         const { completed } = payload
         let newState = {}
         Object.values(state).forEach(todo => {
-          newState[todo.id] = Object.assign({}, todo, {
-            completed
-          })
+          newState[todo.id] = {...todo, completed}
         })
-        newState
+
+        return newState
       },
-      [actions.clearCompleted]: (state, payload) => do {
+      [actions.clearCompleted]: (state, payload) => {
         let newState = {}
         Object.values(state).forEach(todo => {
           if (!todo.completed) {
             newState[todo.id] = todo
           }
         })
-        newState
+        return newState
       },
-      [actions.setEditing]: (state, payload) => do {
+      [actions.setEditing]: (state, payload) => {
         const { id } = payload
 
-        Object.assign({}, state, {
-          [id]: Object.assign({}, state[id], {
+        return {
+          ...state,
+          [id]: {
+            ...state[id],
             editing: true,
             editValue: state[id].value
-          })
-        })
+          }
+        }
       },
-      [actions.updateEditValue]: (state, payload) => do {
+      [actions.updateEditValue]: (state, payload) => {
         const { id, value } = payload
 
-        Object.assign({}, state, {
-          [id]: Object.assign({}, state[id], {
+        return {
+          ...state,
+          [id]: {
+            ...state[id],
             editValue: value
-          })
-        })
+          }
+        }
       },
-      [actions.clearEditing]: (state, payload) => do {
+      [actions.clearEditing]: (state, payload) => {
         const { id } = payload
 
-        Object.assign({}, state, {
-          [id]: Object.assign({}, state[id], {
+        return {
+          ...state,
+          [id]: {
+            ...state[id],
             editing: false,
             editValue: null
-          })
-        })
+          }
+        }
       }
     }, {}, PropTypes.object, { persist: true })
   })
