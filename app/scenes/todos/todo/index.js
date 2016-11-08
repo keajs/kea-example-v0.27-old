@@ -39,9 +39,9 @@ class Todo extends Component {
     }
   }
 
-  updateEditValue = () => {
+  updateEditValue = (e) => {
     const { updateEditValue } = this.props.actions
-    updateEditValue(this.refs.editField.value)
+    updateEditValue(e.target.value)
   }
 
   onKeyDown = (e) => {
@@ -76,6 +76,7 @@ class Todo extends Component {
       todo.editing ? (
         <li className='editing'>
           <input className='edit'
+                 type='text'
                  ref='editField'
                  value={todo.editValue}
                  onKeyDown={this.onKeyDown}

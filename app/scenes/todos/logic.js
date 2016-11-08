@@ -1,5 +1,4 @@
 import { PropTypes } from 'react'
-import { createAction } from 'redux-act'
 import Logic, { createMapping } from 'kea-logic'
 import mirrorCreator from 'mirror-creator'
 
@@ -19,21 +18,21 @@ class TodosLogic extends Logic {
   // ACTIONS
   actions = ({ constants }) => ({
     // tab
-    showAll: createAction('show all todos', () => {}),
-    showActive: createAction('show active todos', () => {}),
-    showCompleted: createAction('show completed todos', () => {}),
+    showAll: true,
+    showActive: true,
+    showCompleted: true,
 
     // todos
-    addTodo: createAction('add todo', value => ({ value })),
-    removeTodo: createAction('remove todo', id => ({ id })),
-    completeTodo: createAction('complete todo', id => ({ id })),
-    unCompleteTodo: createAction('complete todo', id => ({ id })),
-    renameTodo: createAction('rename todo', (id, value) => ({ id, value })),
-    setEditing: createAction('set as editing', (id) => ({ id })),
-    updateEditValue: createAction('update edit value', (id, value) => ({ id, value })),
-    clearEditing: createAction('unset editing', (id) => ({ id })),
-    toggleAll: createAction('toggle all todos', (completed) => ({ completed })),
-    clearCompleted: createAction('clear completed todos', () => {})
+    addTodo: value => ({ value }),
+    removeTodo: id => ({ id }),
+    completeTodo: id => ({ id }),
+    unCompleteTodo: id => ({ id }),
+    renameTodo: (id, value) => ({ id, value }),
+    setEditing: id => ({ id }),
+    updateEditValue: (id, value) => ({ id, value }),
+    clearEditing: id => ({ id }),
+    toggleAll: completed => ({ completed }),
+    clearCompleted: true
   })
 
   // STRUCTURE
@@ -62,7 +61,7 @@ class TodosLogic extends Logic {
       },
       [actions.removeTodo]: (state, payload) => {
         const { id } = payload
-        const { [id]: dispose, ...rest } = state
+        const { [id]: _dispose_, ...rest } = state
         return rest
       },
       [actions.completeTodo]: (state, payload) => {

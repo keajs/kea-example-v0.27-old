@@ -1,5 +1,4 @@
 import { PropTypes } from 'react'
-import { createAction } from 'redux-act'
 import Logic, { createMapping } from 'kea-logic'
 
 // import mirrorCreator from 'mirror-creator'
@@ -15,7 +14,7 @@ class SceneLogic extends Logic {
 
   // ACTIONS
   actions = ({ constants }) => ({
-    updateName: createAction('change the name of the bird', (name) => ({ name }))
+    updateName: name => ({ name })
   })
 
   // STRUCTURE

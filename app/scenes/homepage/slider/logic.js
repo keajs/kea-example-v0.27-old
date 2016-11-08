@@ -1,5 +1,4 @@
 import { PropTypes } from 'react'
-import { createAction } from 'redux-act'
 import Logic, { createMapping } from 'kea-logic'
 
 export const images = [
@@ -31,7 +30,7 @@ class SliderLogic extends Logic {
 
   // ACTIONS
   actions = ({ constants }) => ({
-    updateSlide: createAction('change to slide with index', (index) => ({ index }))
+    updateSlide: index => ({ index })
   })
 
   // REDUCER
