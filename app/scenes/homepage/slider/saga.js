@@ -1,5 +1,5 @@
 import { take, race, put, cancelled } from 'redux-saga/effects'
-import { selectActionsFromLogic } from 'kea-logic'
+import { selectActionsFromLogic } from 'kea/logic'
 
 import delay from '~/utils/delay'
 

@@ -1,5 +1,5 @@
 import { PropTypes } from 'react'
-import Logic, { createMapping } from 'kea-logic'
+import Logic, { createMapping } from 'kea/logic'
 
 export const images = [
   {

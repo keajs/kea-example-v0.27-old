@@ -4,7 +4,7 @@ import React from 'react'
 
 import { Router, browserHistory } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
-import { getRoutes } from 'kea-logic'
+import { getRoutes } from 'kea/logic'
 
 import App from './scenes/index'
 import routes from './scenes/routes'

@@ -1,4 +1,4 @@
-import { combineScenesAndRoutes } from 'kea-logic'
+import { combineScenesAndRoutes } from 'kea/logic'
 
 const scenes = {
   homepage: require('bundle?lazy&name=homepage!./homepage/scene.js'),

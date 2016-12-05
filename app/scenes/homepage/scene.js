@@ -1,4 +1,4 @@
-import { createScene } from 'kea-logic'
+import { createScene } from 'kea/logic'
 
 import sceneComponent from '~/scenes/homepage/index'
 import sceneLogic from '~/scenes/homepage/logic'

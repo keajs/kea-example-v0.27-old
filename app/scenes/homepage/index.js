@@ -1,7 +1,7 @@
 import './styles.scss'
 
 import React, { Component } from 'react'
-import { connectMapping, propTypesFromMapping } from 'kea-logic'
+import { connectMapping, propTypesFromMapping } from 'kea/logic'
 
 import Slider from './slider'
 

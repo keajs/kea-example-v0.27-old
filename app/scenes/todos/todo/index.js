@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { connectMapping, propTypesFromMapping } from 'kea-logic'
+import { connectMapping, propTypesFromMapping } from 'kea/logic'
 
 import sceneLogic from '~/scenes/todos/logic'
 
