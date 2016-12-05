@@ -3,7 +3,7 @@ import Logic from 'kea/logic'
 
 // import mirrorCreator from 'mirror-creator'
 
-class SceneLogic extends Logic {
+class HomepageLogic extends Logic {
   // PATH
   path = () => ['scenes', 'homepage', 'index']
 
@@ -34,4 +34,4 @@ class SceneLogic extends Logic {
   }
 }
 
-export default new SceneLogic().init()
+export default new HomepageLogic().init()
