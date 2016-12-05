@@ -17,10 +17,10 @@ class Header extends Component {
 
     // react-router
     path: React.PropTypes.string.isRequired
-  };
+  }
 
   static defaultProps = {
-  };
+  }
 
   render () {
     const { dispatch, path } = this.props
@@ -34,7 +34,7 @@ class Header extends Component {
         <nav>
           <a href='/' onClick={load('/')} className={path === '/' ? 'active' : ''}>Kea example</a>
           <a href='/todos' onClick={load('/todos')} className={path.indexOf('/todos') === 0 ? 'active' : ''}>Todos</a>
-          <a href='#'>Saga example</a>
+          <a href='#'>Form example</a>
         </nav>
       </header>
     )

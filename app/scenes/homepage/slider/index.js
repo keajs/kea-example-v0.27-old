@@ -36,7 +36,7 @@ class Slider extends Component {
         <img src={currentImage.src} alt={title} title={title} />
         <div className='buttons'>
           {range(imageCount).map(i => (
-            <a key={i} href='#' className={i === currentSlide ? 'selected' : ''} onClick={() => updateSlide(i)}></a>
+            <a key={i} href='#' className={i === currentSlide ? 'selected' : ''} onClick={() => updateSlide(i)} />
           ))}
         </div>
       </div>
