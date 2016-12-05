@@ -37,13 +37,13 @@ class TodosLogic extends Logic {
 
   // STRUCTURE
   structure = ({ actions, constants }) => ({
-    visibilityFilter: createMapping({
+    visibilityFilter: [constants.SHOW_ALL, PropTypes.string, {
       [actions.showAll]: () => constants.SHOW_ALL,
       [actions.showActive]: () => constants.SHOW_ACTIVE,
       [actions.showCompleted]: () => constants.SHOW_COMPLETED
-    }, constants.SHOW_ALL, PropTypes.string),
+    }],
 
-    todos: createMapping({
+    todos: [{}, PropTypes.object, { persist: true }, {
       [actions.addTodo]: (state, payload) => {
         const { value } = payload
         const id = createUuid()
@@ -150,7 +150,7 @@ class TodosLogic extends Logic {
           }
         }
       }
-    }, {}, PropTypes.object, { persist: true })
+    }]
   })
 
   // SELECTORS (data from reducer + more)

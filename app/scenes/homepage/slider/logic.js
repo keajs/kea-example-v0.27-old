@@ -1,5 +1,5 @@
 import { PropTypes } from 'react'
-import Logic, { createMapping } from 'kea/logic'
+import Logic from 'kea/logic'
 
 export const images = [
   {
@@ -35,11 +35,9 @@ class SliderLogic extends Logic {
 
   // REDUCER
   structure = ({ actions, constants }) => ({
-    currentSlide: createMapping({
-      [actions.updateSlide]: (state, payload) => {
-        return payload.index % images.length
-      }
-    }, 1, PropTypes.number)
+    currentSlide: [1, PropTypes.number, {
+      [actions.updateSlide]: (state, payload) => payload.index % images.length
+    }]
   })
 
   // SELECTORS (data from reducer + more)

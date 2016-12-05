@@ -1,5 +1,5 @@
 import { PropTypes } from 'react'
-import Logic, { createMapping } from 'kea/logic'
+import Logic from 'kea/logic'
 
 // import mirrorCreator from 'mirror-creator'
 
@@ -19,11 +19,9 @@ class SceneLogic extends Logic {
 
   // STRUCTURE
   structure = ({ actions, constants }) => ({
-    name: createMapping({
-      [actions.updateName]: (state, payload) => {
-        return payload.name
-      }
-    }, 'Chirpy', PropTypes.string)
+    name: ['Chirpy', PropTypes.string, {
+      [actions.updateName]: (state, payload) => payload.name
+    }]
   })
 
   // SELECTORS
