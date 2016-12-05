@@ -1,11 +1,11 @@
 import Saga from 'kea/saga'
-import { take, race, put, cancelled } from 'redux-saga/effects'
+import { take, race, put } from 'redux-saga/effects'
 
 import delay from '~/utils/delay'
 
 import sliderLogic from '~/scenes/homepage/slider/logic'
 
-class HomepageSliderSaga extends Saga {
+export default class HomepageSliderSaga extends Saga {
   actions = () => ([
     sliderLogic, [
       'updateSlide'
@@ -17,24 +17,20 @@ class HomepageSliderSaga extends Saga {
 
     console.log('Starting homepage slider saga')
 
-    try {
-      while (true) {
-        const { timeout } = yield race({
-          change: take(updateSlide),
-          timeout: delay(5000)
-        })
+    while (true) {
+      const { timeout } = yield race({
+        change: take(updateSlide),
+        timeout: delay(5000)
+      })
 
-        if (timeout) {
-          const currentSlide = yield sliderLogic.get('currentSlide')
-          yield put(updateSlide(currentSlide + 1))
-        }
-      }
-    } finally {
-      if (yield cancelled()) {
-        console.log('Stopping homepage slider saga')
+      if (timeout) {
+        const currentSlide = yield sliderLogic.get('currentSlide')
+        yield put(updateSlide(currentSlide + 1))
       }
     }
   }
-}
 
-export default new HomepageSliderSaga().init()
+  cancelled = function * () {
+    console.log('Stopping homepage slider saga')
+  }
+}
