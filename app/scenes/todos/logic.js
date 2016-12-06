@@ -154,38 +154,35 @@ class TodosLogic extends Logic {
   })
 
   // SELECTORS (data from reducer + more)
-  selectors = ({ path, structure, constants, selectors, addSelector }) => {
-    addSelector('visibleTodos', PropTypes.array, [
-      selectors.visibilityFilter,
-      selectors.todos
-    ], (visibilityFilter, todos) => do {
-      if (visibilityFilter === constants.SHOW_ALL) {
-        Object.values(todos)
-      } else if (visibilityFilter === constants.SHOW_ACTIVE) {
-        Object.values(todos).filter(todo => !todo.completed)
-      } else if (visibilityFilter === constants.SHOW_COMPLETED) {
-        Object.values(todos).filter(todo => todo.completed)
+  selectors = ({ path, structure, constants, selectors }) => ({
+    todoCount: [
+      () => [PropTypes.number, selectors.todos],
+      (todos) => Object.keys(todos).length
+    ],
+
+    activeTodoCount: [
+      () => [PropTypes.number, selectors.todos],
+      (todos) => Object.values(todos).filter(todo => !todo.completed).length
+    ],
+
+    completedTodoCount: [
+      () => [PropTypes.number, selectors.todos],
+      (todos) => Object.values(todos).filter(todo => todo.completed).length
+    ],
+
+    visibleTodos: [
+      () => [PropTypes.array, selectors.visibilityFilter, selectors.todos],
+      (visibilityFilter, todos) => {
+        if (visibilityFilter === constants.SHOW_ALL) {
+          return Object.values(todos)
+        } else if (visibilityFilter === constants.SHOW_ACTIVE) {
+          return Object.values(todos).filter(todo => !todo.completed)
+        } else if (visibilityFilter === constants.SHOW_COMPLETED) {
+          return Object.values(todos).filter(todo => todo.completed)
+        }
       }
-    })
-
-    addSelector('todoCount', PropTypes.number, [
-      selectors.todos
-    ], (todos) => do {
-      Object.keys(todos).length
-    })
-
-    addSelector('activeTodoCount', PropTypes.number, [
-      selectors.todos
-    ], (todos) => do {
-      Object.values(todos).filter(todo => !todo.completed).length
-    })
-
-    addSelector('completedTodoCount', PropTypes.number, [
-      selectors.todos
-    ], (todos) => do {
-      Object.values(todos).filter(todo => todo.completed).length
-    })
-  }
+    ]
+  })
 }
 
 export default new TodosLogic().init()

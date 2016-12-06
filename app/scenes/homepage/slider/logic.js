@@ -35,21 +35,23 @@ class SliderLogic extends Logic {
 
   // REDUCER
   structure = ({ actions, constants }) => ({
-    currentSlide: [1, PropTypes.number, {
+    currentSlide: [0, PropTypes.number, {
       [actions.updateSlide]: (state, payload) => payload.index % images.length
     }]
   })
 
   // SELECTORS (data from reducer + more)
-  selectors = ({ path, structure, constants, selectors, addSelector }) => {
-    addSelector('currentImage', PropTypes.object, [
-      selectors.currentSlide
-    ], (currentSlide) => {
-      return images[currentSlide]
-    })
+  selectors = ({ path, structure, constants, selectors }) => ({
+    currentImage: [
+      () => [PropTypes.object, selectors.currentSlide],
+      (currentSlide) => images[currentSlide]
+    ],
 
-    addSelector('imageCount', PropTypes.number, [], () => images.length)
-  }
+    imageCount: [
+      () => [PropTypes.number],
+      () => images.length
+    ]
+  })
 }
 
 export default new SliderLogic().init()

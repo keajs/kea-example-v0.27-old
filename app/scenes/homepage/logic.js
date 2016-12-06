@@ -25,13 +25,12 @@ class HomepageLogic extends Logic {
   })
 
   // SELECTORS
-  selectors = ({ path, structure, constants, selectors, addSelector }) => {
-    addSelector('capitalizedName', PropTypes.string, [
-      selectors.name
-    ], (name) => {
-      return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
-    })
-  }
+  selectors = ({ path, structure, constants, selectors }) => ({
+    capitalizedName: [
+      () => [PropTypes.string, selectors.name],
+      (name) => name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+    ]
+  })
 }
 
 export default new HomepageLogic().init()
