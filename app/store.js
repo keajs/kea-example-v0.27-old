@@ -4,7 +4,7 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import { routerReducer, routerMiddleware } from 'react-router-redux'
 import createSagaMiddleware from 'redux-saga'
 import { browserHistory } from 'react-router'
-import { createRootSaga, createKeaStore } from 'kea/logic'
+import { createRootSaga, createKeaStore } from 'kea/scene'
 
 function * appSaga () {
 }

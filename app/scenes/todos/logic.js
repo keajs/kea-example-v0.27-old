@@ -1,6 +1,5 @@
 import Logic from 'kea/logic'
 import { PropTypes } from 'react'
-import mirrorCreator from 'mirror-creator'
 
 import createUuid from '~/utils/create-uuid'
 
@@ -9,11 +8,11 @@ class TodosLogic extends Logic {
   path = () => ['scenes', 'todos', 'index']
 
   // CONSTANTS
-  constants = () => mirrorCreator([
+  constants = () => [
     'SHOW_ALL',
     'SHOW_ACTIVE',
     'SHOW_COMPLETED'
-  ])
+  ]
 
   // ACTIONS
   actions = ({ constants }) => ({

@@ -24,8 +24,9 @@ class SliderLogic extends Logic {
   path = () => ['scenes', 'homepage', 'slider']
 
   // CONSTANTS
-  // constants = () => mirrorCreator([
-  // ])
+  // constants = () => [
+  //   'SOMETHING'
+  // ]
   //
 
   // ACTIONS

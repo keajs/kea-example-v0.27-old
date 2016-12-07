@@ -8,8 +8,9 @@ class HomepageLogic extends Logic {
   path = () => ['scenes', 'homepage', 'index']
 
   // CONSTANTS
-  // constants = () => mirrorCreator([
-  // ])
+  // constants = () => [
+  //   'SOMETHING'
+  // ]
   //
 
   // ACTIONS
