@@ -1,8 +1,6 @@
 import { PropTypes } from 'react'
 import Logic from 'kea/logic'
 
-// import mirrorCreator from 'mirror-creator'
-
 class HomepageLogic extends Logic {
   // PATH
   path = () => ['scenes', 'homepage', 'index']
