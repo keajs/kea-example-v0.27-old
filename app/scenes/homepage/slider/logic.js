@@ -33,15 +33,15 @@ class SliderLogic extends Logic {
     updateSlide: index => ({ index })
   })
 
-  // REDUCER
-  structure = ({ actions, constants }) => ({
+  // REDUCERS
+  reducers = ({ actions, constants }) => ({
     currentSlide: [0, PropTypes.number, {
       [actions.updateSlide]: (state, payload) => payload.index % images.length
     }]
   })
 
-  // SELECTORS (data from reducer + more)
-  selectors = ({ path, structure, constants, selectors }) => ({
+  // SELECTORS
+  selectors = ({ constants, selectors }) => ({
     currentImage: [
       () => [PropTypes.object, selectors.currentSlide],
       (currentSlide) => images[currentSlide]

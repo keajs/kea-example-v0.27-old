@@ -1,5 +1,5 @@
+import Logic from 'kea/logic'
 import { PropTypes } from 'react'
-import Logic, { createMapping } from 'kea/logic'
 import mirrorCreator from 'mirror-creator'
 
 import createUuid from '~/utils/create-uuid'
@@ -35,8 +35,8 @@ class TodosLogic extends Logic {
     clearCompleted: true
   })
 
-  // STRUCTURE
-  structure = ({ actions, constants }) => ({
+  // REDUCERS
+  reducers = ({ actions, constants }) => ({
     visibilityFilter: [constants.SHOW_ALL, PropTypes.string, {
       [actions.showAll]: () => constants.SHOW_ALL,
       [actions.showActive]: () => constants.SHOW_ACTIVE,
@@ -154,7 +154,7 @@ class TodosLogic extends Logic {
   })
 
   // SELECTORS (data from reducer + more)
-  selectors = ({ path, structure, constants, selectors }) => ({
+  selectors = ({ constants, selectors }) => ({
     todoCount: [
       () => [PropTypes.number, selectors.todos],
       (todos) => Object.keys(todos).length

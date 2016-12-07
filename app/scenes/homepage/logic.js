@@ -17,15 +17,15 @@ class HomepageLogic extends Logic {
     updateName: name => ({ name })
   })
 
-  // STRUCTURE
-  structure = ({ actions, constants }) => ({
+  // REDUCERS
+  reducers = ({ actions, constants }) => ({
     name: ['Chirpy', PropTypes.string, {
       [actions.updateName]: (state, payload) => payload.name
     }]
   })
 
   // SELECTORS
-  selectors = ({ path, structure, constants, selectors }) => ({
+  selectors = ({ constants, selectors }) => ({
     capitalizedName: [
       () => [PropTypes.string, selectors.name],
       (name) => name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
