@@ -26,7 +26,8 @@ class HomepageLogic extends Logic {
   // SELECTORS
   selectors = ({ constants, selectors }) => ({
     capitalizedName: [
-      () => [PropTypes.string, selectors.name],
+      () => [ PropTypes.string,
+              selectors.name ],
       (name) => name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
     ]
   })

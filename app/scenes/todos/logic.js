@@ -155,22 +155,27 @@ class TodosLogic extends Logic {
   // SELECTORS (data from reducer + more)
   selectors = ({ constants, selectors }) => ({
     todoCount: [
-      () => [PropTypes.number, selectors.todos],
+      () => [ PropTypes.number,
+              selectors.todos ],
       (todos) => Object.keys(todos).length
     ],
 
     activeTodoCount: [
-      () => [PropTypes.number, selectors.todos],
+      () => [ PropTypes.number,
+              selectors.todos ],
       (todos) => Object.values(todos).filter(todo => !todo.completed).length
     ],
 
     completedTodoCount: [
-      () => [PropTypes.number, selectors.todos],
+      () => [ PropTypes.number,
+              selectors.todos ],
       (todos) => Object.values(todos).filter(todo => todo.completed).length
     ],
 
     visibleTodos: [
-      () => [PropTypes.array, selectors.visibilityFilter, selectors.todos],
+      () => [ PropTypes.array,
+              selectors.visibilityFilter,
+              selectors.todos ],
       (visibilityFilter, todos) => {
         if (visibilityFilter === constants.SHOW_ALL) {
           return Object.values(todos)
