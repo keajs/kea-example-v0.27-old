@@ -1,13 +1,13 @@
 import './styles.scss'
 
 import React, { Component } from 'react'
-import { connectMapping, propTypesFromMapping } from 'kea/logic'
+import { connect } from 'kea/logic'
 
 import range from '~/utils/range'
 
 import sliderLogic from './logic'
 
-const mapping = {
+@connect({
   actions: [
     sliderLogic, [
       'updateSlide'
@@ -20,11 +20,8 @@ const mapping = {
       'imageCount'
     ]
   ]
-}
-
-class Slider extends Component {
-  static propTypes = propTypesFromMapping(mapping)
-
+})
+export default class Slider extends Component {
   render () {
     const { currentSlide, currentImage, imageCount } = this.props
     const { updateSlide } = this.props.actions
@@ -43,5 +40,3 @@ class Slider extends Component {
     )
   }
 }
-
-export default connectMapping(mapping)(Slider)

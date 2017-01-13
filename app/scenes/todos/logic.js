@@ -1,9 +1,10 @@
-import Logic from 'kea/logic'
+import Logic, { initLogic } from 'kea/logic'
 import { PropTypes } from 'react'
 
 import createUuid from '~/utils/create-uuid'
 
-class TodosLogic extends Logic {
+@initLogic
+export default class TodosLogic extends Logic {
   // PATH
   path = () => ['scenes', 'todos', 'index']
 
@@ -188,5 +189,3 @@ class TodosLogic extends Logic {
     ]
   })
 }
-
-export default new TodosLogic().init()

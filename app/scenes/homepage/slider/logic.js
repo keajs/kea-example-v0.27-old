@@ -1,5 +1,5 @@
 import { PropTypes } from 'react'
-import Logic from 'kea/logic'
+import Logic, { initLogic } from 'kea/logic'
 
 export const images = [
   {
@@ -19,7 +19,8 @@ export const images = [
   }
 ]
 
-class SliderLogic extends Logic {
+@initLogic
+export default class SliderLogic extends Logic {
   // PATH
   path = () => ['scenes', 'homepage', 'slider']
 
@@ -54,5 +55,3 @@ class SliderLogic extends Logic {
     ]
   })
 }
-
-export default new SliderLogic().init()

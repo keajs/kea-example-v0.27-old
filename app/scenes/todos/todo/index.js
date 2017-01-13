@@ -1,14 +1,14 @@
-import React, { Component } from 'react'
-import { connectMapping, propTypesFromMapping } from 'kea/logic'
+import React, { Component, PropTypes } from 'react'
+import { connect } from 'kea/logic'
 
 import sceneLogic from '~/scenes/todos/logic'
 
 const ESCAPE = 27
 const ENTER = 13
 
-const mapping = {
-  passedProps: {
-    id: React.PropTypes.string.isRequired
+@connect({
+  propTypes: {
+    id: PropTypes.string.isRequired
   },
   actions: [
     sceneLogic, [
@@ -26,11 +26,8 @@ const mapping = {
       'todos[id] as todo'
     ]
   ]
-}
-
-class Todo extends Component {
-  static propTypes = propTypesFromMapping(mapping)
-
+})
+export default class Todo extends Component {
   componentDidUpdate (prevProps) {
     if (this.props.todo.editing && !prevProps.todo.editing) {
       const node = this.refs.editField
@@ -102,5 +99,3 @@ class Todo extends Component {
     )
   }
 }
-
-export default connectMapping(mapping)(Todo)

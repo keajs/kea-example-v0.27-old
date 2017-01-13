@@ -1,7 +1,8 @@
 import { PropTypes } from 'react'
-import Logic from 'kea/logic'
+import Logic, { initLogic } from 'kea/logic'
 
-class HomepageLogic extends Logic {
+@initLogic
+export default class HomepageLogic extends Logic {
   // PATH
   path = () => ['scenes', 'homepage', 'index']
 
@@ -32,5 +33,3 @@ class HomepageLogic extends Logic {
     ]
   })
 }
-
-export default new HomepageLogic().init()

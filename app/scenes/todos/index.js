@@ -1,21 +1,21 @@
 import './styles.scss'
 
 import React, { Component } from 'react'
-import { connectMapping, propTypesFromMapping } from 'kea/logic'
+import { connect } from 'kea/logic'
 
 import Todo from './todo'
 
 import sceneLogic from './logic'
 
-const { 
+const {
   SHOW_ALL,
   SHOW_ACTIVE,
-  SHOW_COMPLETED 
+  SHOW_COMPLETED
 } = sceneLogic.constants
 
 const ENTER = 13
 
-const mapping = {
+@connect({
   actions: [
     sceneLogic, [
       'showAll',
@@ -35,11 +35,8 @@ const mapping = {
       'completedTodoCount'
     ]
   ]
-}
-
-class TodosScene extends Component {
-  static propTypes = propTypesFromMapping(mapping)
-
+})
+export default class TodosScene extends Component {
   handleToggleAll = (e) => {
     const { toggleAll } = this.props.actions
     toggleAll(e.target.checked)
@@ -111,5 +108,3 @@ class TodosScene extends Component {
     )
   }
 }
-
-export default connectMapping(mapping)(TodosScene)

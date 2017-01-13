@@ -1,14 +1,14 @@
 import './styles.scss'
 
 import React, { Component } from 'react'
-import { connectMapping, propTypesFromMapping } from 'kea/logic'
+import { connect } from 'kea/logic'
 
 import Slider from './slider'
 
 import sceneLogic from './logic'
 import sliderLogic from './slider/logic'
 
-const mapping = {
+@connect({
   actions: [
     sceneLogic, [
       'updateName'
@@ -24,11 +24,8 @@ const mapping = {
       'currentImage'
     ]
   ]
-}
-
-class HomepageScene extends Component {
-  static propTypes = propTypesFromMapping(mapping)
-
+})
+export default class HomepageScene extends Component {
   updateName = () => {
     const { name } = this.props
     const { updateName } = this.props.actions
@@ -57,4 +54,3 @@ class HomepageScene extends Component {
   }
 }
 
-export default connectMapping(mapping)(HomepageScene)
