@@ -27,6 +27,9 @@ header.body-header {
       &:hover {
         color: #000;
       }
+      &.right {
+        margin-left: auto;
+      }
     }
   }
 }
