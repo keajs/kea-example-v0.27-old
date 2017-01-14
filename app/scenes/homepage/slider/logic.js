@@ -45,13 +45,15 @@ export default class SliderLogic extends Logic {
   // SELECTORS
   selectors = ({ constants, selectors }) => ({
     currentImage: [
-      () => [PropTypes.object, selectors.currentSlide],
-      (currentSlide) => images[currentSlide]
+      () => [selectors.currentSlide],
+      (currentSlide) => images[currentSlide],
+      PropTypes.object
     ],
 
     imageCount: [
-      () => [PropTypes.number],
-      () => images.length
+      () => [],
+      () => images.length,
+      PropTypes.number
     ]
   })
 }

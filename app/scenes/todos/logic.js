@@ -156,27 +156,25 @@ export default class TodosLogic extends Logic {
   // SELECTORS (data from reducer + more)
   selectors = ({ constants, selectors }) => ({
     todoCount: [
-      () => [ PropTypes.number,
-              selectors.todos ],
-      (todos) => Object.keys(todos).length
+      () => [ selectors.todos ],
+      (todos) => Object.keys(todos).length,
+      PropTypes.number
     ],
 
     activeTodoCount: [
-      () => [ PropTypes.number,
-              selectors.todos ],
-      (todos) => Object.values(todos).filter(todo => !todo.completed).length
+      () => [ selectors.todos ],
+      (todos) => Object.values(todos).filter(todo => !todo.completed).length,
+      PropTypes.number
     ],
 
     completedTodoCount: [
-      () => [ PropTypes.number,
-              selectors.todos ],
-      (todos) => Object.values(todos).filter(todo => todo.completed).length
+      () => [ selectors.todos ],
+      (todos) => Object.values(todos).filter(todo => todo.completed).length,
+      PropTypes.number
     ],
 
     visibleTodos: [
-      () => [ PropTypes.array,
-              selectors.visibilityFilter,
-              selectors.todos ],
+      () => [ selectors.visibilityFilter, selectors.todos ],
       (visibilityFilter, todos) => {
         if (visibilityFilter === constants.SHOW_ALL) {
           return Object.values(todos)
@@ -185,7 +183,8 @@ export default class TodosLogic extends Logic {
         } else if (visibilityFilter === constants.SHOW_COMPLETED) {
           return Object.values(todos).filter(todo => todo.completed)
         }
-      }
+      },
+      PropTypes.array
     ]
   })
 }
