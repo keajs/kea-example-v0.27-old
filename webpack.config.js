@@ -26,10 +26,10 @@ var config = {
     chunkFilename: '[name].bundle.js'
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.html$/,
-        loader: 'file',
+        loader: 'file-loader',
         query: {
           name: '[name].[ext]'
         }
@@ -37,17 +37,37 @@ var config = {
       {
         test: /\.s?css$/,
         loaders: [
-          'style',
-          'css',
-          'postcss'
+          'style-loader',
+          'css-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              ident: 'postcss',
+              plugins: () => [require('autoprefixer'), require('precss')]
+            }
+          }
         ]
       },
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        loaders: (isProd ? [] : ['react-hot']).concat([
-          'babel-loader'
-        ])
+        loader: 'babel-loader',
+        query: isProd ? {} : {
+          plugins: [
+            [
+              'react-transform',
+              {
+                transforms: [
+                  {
+                    transform: 'react-transform-hmr',
+                    imports: ['react'],
+                    locals: ['module']
+                  }
+                ]
+              }
+            ]
+          ]
+        }
       },
       {
         test: /\.(png|jpg)$/,
@@ -57,7 +77,7 @@ var config = {
     ]
   },
   resolve: {
-    extensions: ['', '.js', '.jsx'],
+    extensions: ['.js', '.jsx'],
     modules: [
       path.resolve('./app'),
       'node_modules'
@@ -66,11 +86,8 @@ var config = {
       '~': path.join(__dirname, './app')
     }
   },
-  postcss: function () {
-    return [require('autoprefixer'), require('precss')];
-  },
   plugins: [
-     new webpack.optimize.CommonsChunkPlugin({ 
+    new webpack.optimize.CommonsChunkPlugin({
       name: 'common',
       minChunks: 2,
       filename: 'common.bundle.js'
@@ -87,10 +104,11 @@ var config = {
     new webpack.DefinePlugin({
       'process.env': { NODE_ENV: JSON.stringify(nodeEnv) }
     })
-  ],
+  ].concat(isProd ? [] : [
+    new webpack.NamedModulesPlugin()
+  ]),
   devServer: {
     contentBase: './app'
-    // hot: true
   }
 }
 
@@ -98,8 +116,7 @@ var config = {
 if (!isProd) {
   Object.keys(config.entry).forEach(function (k) {
     config.entry[k].unshift(
-      'webpack-dev-server/client?http://0.0.0.0:2000',
-      'webpack/hot/only-dev-server'
+      'webpack-dev-server/client?http://0.0.0.0:2000'
     )
   })
 }
