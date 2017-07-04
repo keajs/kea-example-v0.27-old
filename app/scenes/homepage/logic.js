@@ -1,35 +1,36 @@
 import { PropTypes } from 'react'
-import Logic, { initLogic } from 'kea/logic'
+import { createLogic } from 'kea/logic'
 
-@initLogic
-export default class HomepageLogic extends Logic {
+export default createLogic({
   // PATH
-  path = () => ['scenes', 'homepage', 'index']
+  path: () => ['scenes', 'homepage', 'index'],
 
   // CONSTANTS
-  // constants = () => [
+  // constants: () => [
   //   'SOMETHING'
-  // ]
+  // ],
   //
 
   // ACTIONS
-  actions = ({ constants }) => ({
+  actions: ({ constants }) => ({
     updateName: name => ({ name })
-  })
+  }),
 
   // REDUCERS
-  reducers = ({ actions, constants }) => ({
+  reducers: ({ actions, constants }) => ({
     name: ['Chirpy', PropTypes.string, {
       [actions.updateName]: (state, payload) => payload.name
     }]
-  })
+  }),
 
   // SELECTORS
-  selectors = ({ constants, selectors }) => ({
+  selectors: ({ constants, selectors }) => ({
     capitalizedName: [
       () => [selectors.name],
-      (name) => name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' '),
+      (name) => {
+        return name.trim().split(' ').map(k => `${k.charAt(0).toUpperCase()}${k.slice(1).toLowerCase()}`).join(' ')
+      },
       PropTypes.string
     ]
   })
-}
+})

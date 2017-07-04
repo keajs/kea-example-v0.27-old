@@ -1,9 +1,9 @@
-import Saga from 'kea/saga'
+import { createSaga } from 'kea/saga'
 
 import delay from '~/utils/delay'
 
-export default class HomepageSaga extends Saga {
-  run = function * () {
+export default createSaga({
+  start: function * () {
     console.log('Starting homepage saga')
 
     this.count = 0
@@ -13,10 +13,10 @@ export default class HomepageSaga extends Saga {
       this.count += 1
       console.log(this.count)
     }
-  }
+  },
 
-  cancelled = function * () {
+  stop: function * () {
     console.log('Stopping homepage saga')
     console.log(`got to ${this.count}`)
   }
-}
+})

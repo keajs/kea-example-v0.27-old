@@ -1,7 +1,7 @@
 import Saga from 'kea/saga'
 
 export default class TodosSaga extends Saga {
-  run = function * () {
+  start = function * () {
     console.log('Starting todos saga')
   }
 }

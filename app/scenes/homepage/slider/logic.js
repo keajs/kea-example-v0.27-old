@@ -1,5 +1,5 @@
 import { PropTypes } from 'react'
-import Logic, { initLogic } from 'kea/logic'
+import { createLogic } from 'kea/logic'
 
 export const images = [
   {
@@ -19,10 +19,9 @@ export const images = [
   }
 ]
 
-@initLogic
-export default class SliderLogic extends Logic {
+export default createLogic({
   // PATH
-  path = () => ['scenes', 'homepage', 'slider']
+  path: () => ['scenes', 'homepage', 'slider'],
 
   // CONSTANTS
   // constants = () => [
@@ -31,19 +30,19 @@ export default class SliderLogic extends Logic {
   //
 
   // ACTIONS
-  actions = ({ constants }) => ({
+  actions: ({ constants }) => ({
     updateSlide: index => ({ index })
-  })
+  }),
 
   // REDUCERS
-  reducers = ({ actions, constants }) => ({
+  reducers: ({ actions, constants }) => ({
     currentSlide: [0, PropTypes.number, {
       [actions.updateSlide]: (state, payload) => payload.index % images.length
     }]
-  })
+  }),
 
   // SELECTORS
-  selectors = ({ constants, selectors }) => ({
+  selectors: ({ constants, selectors }) => ({
     currentImage: [
       () => [selectors.currentSlide],
       (currentSlide) => images[currentSlide],
@@ -56,4 +55,4 @@ export default class SliderLogic extends Logic {
       PropTypes.number
     ]
   })
-}
+})
