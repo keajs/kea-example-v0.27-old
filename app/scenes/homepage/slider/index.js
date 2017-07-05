@@ -8,29 +8,12 @@ import { take, race, put } from 'redux-saga/effects'
 import delay from '~/utils/delay'
 import range from '~/utils/range'
 
-export const images = [
-  {
-    src: require('./_assets/kea1.jpg'),
-    url: 'https://www.flickr.com/photos/kevinglisson/5855716978',
-    author: 'Kevin Glisson'
-  },
-  {
-    src: require('./_assets/kea2.jpg'),
-    url: 'https://www.flickr.com/photos/geoftheref/9770370326/',
-    author: 'Geof Wilson'
-  },
-  {
-    src: require('./_assets/kea3.jpg'),
-    url: 'https://www.flickr.com/photos/apertureeffect/20391690360',
-    author: 'Rafal Wadowski'
-  }
-]
+import images from './images'
 
-export const path = (key) => ['scenes', 'homepage', 'slider', key]
 @inline({
   key: (props) => props.id,
 
-  path: path,
+  path: (key) => ['scenes', 'homepage', 'slider', key],
 
   actions: () => ({
     updateSlide: index => ({ index })
@@ -62,7 +45,7 @@ export const path = (key) => ['scenes', 'homepage', 'slider', key]
       })
 
       if (timeout) {
-        const currentSlide = yield sliderLogic.get('currentSlide')
+        const currentSlide = yield this.get('currentSlide')
         yield put(updateSlide(currentSlide + 1))
       }
     }
@@ -73,22 +56,9 @@ export const path = (key) => ['scenes', 'homepage', 'slider', key]
   }
 })
 export default class Slider extends Component {
-  constructor (props) {
-    super(props)
-    console.log('old constructor', props)
-
-    this.state = {
-      currentSlide: props.currentSlide
-    }
-  }
-
-  componentWillMount () {
-    console.log('will mount original', this)
-  }
-
   render () {
     const { currentSlide, currentImage } = this.props
-    const { updateSlide } = this.props.actions
+    const { updateSlide } = this.actions
 
     const title = `Image copyright by ${currentImage.author}`
 

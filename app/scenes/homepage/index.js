@@ -3,7 +3,7 @@ import './styles.scss'
 import React, { Component } from 'react'
 import { connect } from 'kea/logic'
 
-import Slider, { path as sliderPath } from './slider'
+import Slider from './slider'
 
 import sceneLogic from './logic'
 
@@ -18,7 +18,7 @@ import sceneLogic from './logic'
       'name',
       'capitalizedName'
     ],
-    sliderPath(1), [
+    Slider.kea.path(1), [
       'currentSlide',
       'currentImage'
     ]
