@@ -9,7 +9,7 @@ export default createSaga({
     this.count = 0
 
     while (true) {
-      yield delay(3000)
+      yield delay(1000)
       this.count += 1
       console.log(this.count)
     }

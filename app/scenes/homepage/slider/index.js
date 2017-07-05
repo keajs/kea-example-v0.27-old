@@ -37,6 +37,7 @@ import images from './images'
     const { updateSlide } = this.actions
 
     console.log('Starting homepage slider saga')
+    console.log(this, this.actions, this.props)
 
     while (true) {
       const { timeout } = yield race({
@@ -53,6 +54,17 @@ import images from './images'
 
   stop: function * () {
     console.log('Stopping homepage slider saga')
+  },
+
+  takeEvery: ({ actions, workers }) => ({
+    [actions.updateSlide]: workers.updateSlide
+  }),
+
+  workers: {
+    updateSlide: function * (action) {
+      console.log('slide update triggered', action)
+      console.log(this)
+    }
   }
 })
 export default class Slider extends Component {
