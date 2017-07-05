@@ -17,10 +17,6 @@ import sceneLogic from './logic'
     sceneLogic, [
       'name',
       'capitalizedName'
-    ],
-    Slider.kea.path(1), [
-      'currentSlide',
-      'currentImage'
     ]
   ]
 })
@@ -37,19 +33,15 @@ export default class HomepageScene extends Component {
   }
 
   render () {
-    const { capitalizedName, currentSlide, currentImage } = this.props
+    const { capitalizedName } = this.props
 
     return (
       <div className='homepage-scene'>
-        <Slider id={1} />
         <h1>
           Hello, I'm <em onClick={this.updateName}>{capitalizedName}</em> the Kea
         </h1>
-        {currentImage ? (
-          <p>
-            You are viewing image #{currentSlide + 1}, taken by <a href={currentImage.url} target='_blank'>{currentImage.author}</a>
-          </p>
-        ) : null}
+        <Slider id={1} initialSlide={0} />
+        <Slider id={2} initialSlide={1} />
       </div>
     )
   }

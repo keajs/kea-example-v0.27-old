@@ -19,8 +19,8 @@ import images from './images'
     updateSlide: index => ({ index })
   }),
 
-  reducers: ({ actions, key }) => ({
-    currentSlide: [0, PropTypes.number, {
+  reducers: ({ actions, key, props }) => ({
+    currentSlide: [props.initialSlide || 0, PropTypes.number, {
       [actions.updateSlide]: (state, payload) => payload.key === key ? payload.index % images.length : state
     }]
   }),
@@ -41,7 +41,7 @@ import images from './images'
 
     while (true) {
       const { timeout } = yield race({
-        change: take(updateSlide),
+        change: take(action => action.type === updateSlide.toString() && action.payload.key === this.key),
         timeout: delay(5000)
       })
 
