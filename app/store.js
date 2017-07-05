@@ -1,17 +1,18 @@
 /* global window */
 
-import { createStore, applyMiddleware, compose } from 'redux'
+import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
 import { routerReducer, routerMiddleware } from 'react-router-redux'
 import createSagaMiddleware from 'redux-saga'
 import { browserHistory } from 'react-router'
-import { createRootSaga, createKeaStore } from 'kea/scene'
+import { createRootSaga, keaReducer } from 'kea/scene'
 
 function * appSaga () {
 }
 
-const appReducers = {
-  routing: routerReducer
-}
+const reducers = combineReducers({
+  routing: routerReducer,
+  scenes: keaReducer('scenes')
+})
 
 const sagaMiddleware = createSagaMiddleware()
 const finalCreateStore = compose(
@@ -20,7 +21,8 @@ const finalCreateStore = compose(
   window.devToolsExtension ? window.devToolsExtension() : f => f
 )(createStore)
 
-const store = createKeaStore(finalCreateStore, appReducers)
+const store = finalCreateStore(reducers)
+
 sagaMiddleware.run(createRootSaga(appSaga))
 
 export default store
