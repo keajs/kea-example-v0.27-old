@@ -67,7 +67,7 @@ export default class Slider extends Component {
         <img src={currentImage.src} alt={title} title={title} />
         <div className='buttons'>
           {range(images.length).map(i => (
-            <a key={i} href='#' className={i === currentSlide ? 'selected' : ''} onClick={() => updateSlide(i)} />
+            <span key={i} className={i === currentSlide ? 'selected' : ''} onClick={() => updateSlide(i)} />
           ))}
         </div>
       </div>
