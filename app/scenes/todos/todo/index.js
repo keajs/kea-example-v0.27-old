@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import { connect } from 'kea/logic'
+import { connect } from 'kea'
 
 import sceneLogic from '~/scenes/todos/logic'
 

@@ -1,4 +1,4 @@
-import { createSaga } from 'kea/saga'
+import { createSaga } from 'kea'
 
 import delay from '~/utils/delay'
 

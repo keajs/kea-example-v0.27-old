@@ -4,7 +4,7 @@ import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
 import { routerReducer, routerMiddleware } from 'react-router-redux'
 import createSagaMiddleware from 'redux-saga'
 import { browserHistory } from 'react-router'
-import { keaSceneSaga, keaReducer } from 'kea/scene'
+import { keaSaga, keaReducer } from 'kea'
 
 const reducers = combineReducers({
   routing: routerReducer,
@@ -20,6 +20,6 @@ const finalCreateStore = compose(
 
 const store = finalCreateStore(reducers)
 
-sagaMiddleware.run(keaSceneSaga)
+sagaMiddleware.run(keaSaga)
 
 export default store

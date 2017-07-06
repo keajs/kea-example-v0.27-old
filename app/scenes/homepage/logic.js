@@ -1,5 +1,5 @@
 import { PropTypes } from 'react'
-import { createLogic } from 'kea/logic'
+import { createLogic } from 'kea'
 
 export default createLogic({
   // PATH

@@ -1,7 +1,7 @@
 import './styles.scss'
 
 import React, { Component, PropTypes } from 'react'
-import { inline } from 'kea/logic'
+import { kea } from 'kea'
 
 import { take, race, put } from 'redux-saga/effects'
 
@@ -10,7 +10,7 @@ import range from '~/utils/range'
 
 import images from './images'
 
-@inline({
+@kea({
   key: (props) => props.id,
 
   path: (key) => ['scenes', 'homepage', 'slider', key],
@@ -37,7 +37,7 @@ import images from './images'
     const { updateSlide } = this.actions
 
     console.log('Starting homepage slider saga')
-    console.log(this, this.actions, this.props)
+    // console.log(this, this.actions, this.props)
 
     while (true) {
       const { timeout } = yield race({
@@ -62,8 +62,10 @@ import images from './images'
 
   workers: {
     updateSlide: function * (action) {
-      console.log('slide update triggered', action)
-      console.log(this)
+      if (action.payload.key === this.key) {
+        console.log('slide update triggered', action.payload.key, this.key, this.props.id)
+        // console.log(action, this)
+      }
     }
   }
 })
