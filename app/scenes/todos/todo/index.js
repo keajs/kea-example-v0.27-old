@@ -7,27 +7,23 @@ const ESCAPE = 27
 const ENTER = 13
 
 @connect({
-  propTypes: {
-    id: PropTypes.string.isRequired
-  },
   actions: [
     sceneLogic, [
-      'renameTodo(id)',
-      'removeTodo(id)',
-      'completeTodo(id)',
-      'unCompleteTodo(id)',
-      'setEditing(id)',
-      'updateEditValue(id)',
-      'clearEditing(id)'
-    ]
-  ],
-  props: [
-    sceneLogic, [
-      'todos[id] as todo'
+      'renameTodo',
+      'removeTodo',
+      'completeTodo',
+      'unCompleteTodo',
+      'setEditing',
+      'updateEditValue',
+      'clearEditing'
     ]
   ]
 })
 export default class Todo extends Component {
+  static propTypes = {
+    todo: PropTypes.object.isRequired
+  }
+
   componentDidUpdate (prevProps) {
     if (this.props.todo.editing && !prevProps.todo.editing) {
       const node = this.refs.editField
@@ -37,37 +33,39 @@ export default class Todo extends Component {
   }
 
   updateEditValue = (e) => {
-    const { updateEditValue } = this.props.actions
-    updateEditValue(e.target.value)
+    const { todo } = this.props
+    const { updateEditValue } = this.actions
+
+    updateEditValue(todo.id, e.target.value)
   }
 
   onKeyDown = (e) => {
-    const { clearEditing } = this.props.actions
+    const { todo } = this.props
+    const { clearEditing } = this.actions
+
     if (e.keyCode === ESCAPE) {
-      clearEditing()
+      clearEditing(todo.id)
     } else if (e.keyCode === ENTER) {
       this.saveTodo()
     }
   }
 
   saveTodo = () => {
-    const { renameTodo, clearEditing, removeTodo } = this.props.actions
+    const { todo } = this.props
+    const { renameTodo, clearEditing, removeTodo } = this.actions
     const { value } = this.refs.editField
 
     if (value.trim()) {
-      renameTodo(value.trim())
-      clearEditing()
+      renameTodo(todo.id, value.trim())
+      clearEditing(todo.id)
     } else {
-      removeTodo()
+      removeTodo(todo.id)
     }
   }
 
   render () {
     const { todo } = this.props
-    const { unCompleteTodo,
-            completeTodo,
-            setEditing,
-            removeTodo } = this.props.actions
+    const { unCompleteTodo, completeTodo, setEditing, removeTodo } = this.actions
 
     return (
       todo.editing ? (
@@ -86,13 +84,13 @@ export default class Todo extends Component {
             <input className='toggle'
                    checked={todo.completed}
                    type='checkbox'
-                   onChange={todo.completed ? unCompleteTodo : completeTodo} />
-            <label onTouchEnd={setEditing}
-                   onDoubleClick={setEditing}>
+                   onChange={() => todo.completed ? unCompleteTodo(todo.id) : completeTodo(todo.id)} />
+            <label onTouchEnd={() => setEditing(todo.id)}
+                   onDoubleClick={() => setEditing(todo.id)}>
               {todo.value}
             </label>
             <button className='destroy'
-                    onClick={removeTodo} />
+                    onClick={() => removeTodo(todo.id)} />
           </div>
         </li>
       )

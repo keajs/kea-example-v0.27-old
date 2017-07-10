@@ -1,7 +1,7 @@
 import './styles.scss'
 
 import React, { Component } from 'react'
-import { connect } from 'kea/logic'
+import { connect } from 'kea'
 
 import Todo from './todo'
 
@@ -57,7 +57,7 @@ export default class TodosScene extends Component {
 
   render () {
     const { visibilityFilter, visibleTodos, todoCount, activeTodoCount, completedTodoCount } = this.props
-    const { showAll, showActive, showCompleted, clearCompleted } = this.props.actions
+    const { showAll, showActive, showCompleted, clearCompleted } = this.actions
 
     return (
       <div className='todo-scene'>
@@ -70,7 +70,7 @@ export default class TodosScene extends Component {
             <section className='main'>
               <input className='toggle-all' type='checkbox' onChange={this.handleToggleAll} checked={activeTodoCount === 0} />
               <ul className='todo-list'>
-                {visibleTodos.map(todo => <Todo key={todo.id} id={todo.id} />)}
+                {visibleTodos.map(todo => <Todo key={todo.id} todo={todo} />)}
               </ul>
             </section>
           ) : null}

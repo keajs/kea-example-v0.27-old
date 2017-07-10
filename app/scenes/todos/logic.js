@@ -1,22 +1,18 @@
-import Logic, { initLogic } from 'kea/logic'
+import { kea } from 'kea/logic'
 import { PropTypes } from 'react'
 
 import createUuid from '~/utils/create-uuid'
 
-@initLogic
-export default class TodosLogic extends Logic {
-  // PATH
-  path = () => ['scenes', 'todos', 'index']
+export default kea({
+  path: () => ['scenes', 'todos', 'index'],
 
-  // CONSTANTS
-  constants = () => [
+  constants: () => [
     'SHOW_ALL',
     'SHOW_ACTIVE',
     'SHOW_COMPLETED'
-  ]
+  ],
 
-  // ACTIONS
-  actions = ({ constants }) => ({
+  actions: ({ constants }) => ({
     // tab
     showAll: true,
     showActive: true,
@@ -33,10 +29,9 @@ export default class TodosLogic extends Logic {
     clearEditing: id => ({ id }),
     toggleAll: completed => ({ completed }),
     clearCompleted: true
-  })
+  }),
 
-  // REDUCERS
-  reducers = ({ actions, constants }) => ({
+  reducers: ({ actions, constants }) => ({
     visibilityFilter: [constants.SHOW_ALL, PropTypes.string, {
       [actions.showAll]: () => constants.SHOW_ALL,
       [actions.showActive]: () => constants.SHOW_ACTIVE,
@@ -151,10 +146,10 @@ export default class TodosLogic extends Logic {
         }
       }
     }]
-  })
+  }),
 
   // SELECTORS (data from reducer + more)
-  selectors = ({ constants, selectors }) => ({
+  selectors: ({ constants, selectors }) => ({
     todoCount: [
       () => [selectors.todos],
       (todos) => Object.keys(todos).length,
@@ -187,4 +182,4 @@ export default class TodosLogic extends Logic {
       PropTypes.array
     ]
   })
-}
+})

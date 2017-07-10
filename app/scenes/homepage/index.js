@@ -40,8 +40,13 @@ export default class HomepageScene extends Component {
         <h1>
           Hello, I'm <em onClick={this.updateName}>{capitalizedName}</em> the Kea
         </h1>
-        <Slider id={1} initialSlide={0} />
-        <Slider id={2} initialSlide={1} />
+        <div className='slider-container'>
+          <Slider id={1} initialSlide={0} />
+          <Slider id={2} initialSlide={1} />
+        </div>
+        <div>
+          This example demonstrates two components dynamically connected to redux.
+        </div>
       </div>
     )
   }

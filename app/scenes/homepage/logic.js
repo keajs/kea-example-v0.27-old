@@ -1,29 +1,24 @@
 import { PropTypes } from 'react'
-import { createLogic } from 'kea'
+import { kea } from 'kea'
 
-export default createLogic({
-  // PATH
+export default kea({
   path: () => ['scenes', 'homepage', 'index'],
 
-  // CONSTANTS
   // constants: () => [
   //   'SOMETHING'
   // ],
   //
 
-  // ACTIONS
   actions: ({ constants }) => ({
     updateName: name => ({ name })
   }),
 
-  // REDUCERS
   reducers: ({ actions, constants }) => ({
     name: ['Chirpy', PropTypes.string, {
       [actions.updateName]: (state, payload) => payload.name
     }]
   }),
 
-  // SELECTORS
   selectors: ({ constants, selectors }) => ({
     capitalizedName: [
       () => [selectors.name],
