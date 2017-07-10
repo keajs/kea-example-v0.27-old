@@ -5,6 +5,7 @@ import { connect } from 'kea'
 
 import Slider from './slider'
 
+import sceneSaga from './saga'
 import sceneLogic from './logic'
 
 @connect({
@@ -18,6 +19,9 @@ import sceneLogic from './logic'
       'name',
       'capitalizedName'
     ]
+  ],
+  sagas: [
+    sceneSaga
   ]
 })
 export default class HomepageScene extends Component {
@@ -44,8 +48,10 @@ export default class HomepageScene extends Component {
           <Slider id={1} initialSlide={0} />
           <Slider id={2} initialSlide={1} />
         </div>
-        <div>
+        <div style={{ marginTop: 20 }}>
           This example demonstrates two components dynamically connected to redux.
+          <br />
+          Each have their own sagas that indepentenly update the image in the slider.
         </div>
       </div>
     )
