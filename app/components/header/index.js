@@ -35,8 +35,7 @@ class Header extends Component {
           <a href='/' onClick={load('/')} className={path === '/' ? 'active' : ''}>Kea example</a>
           <a href='/todos' onClick={load('/todos')} className={path.indexOf('/todos') === 0 ? 'active' : ''}>Todos</a>
 
-          <a className='right' href='https://www.github.com/mariusandra/kea-example' target='_blank'>Fork on Github</a>
-          <a href='https://gomix.com/#!/project/kea-example' target='_blank'>Mix in Gomix</a>
+          <a className='right' href='https://www.github.com/keajs/kea-example' target='_blank'>Fork on Github</a>
         </nav>
       </header>
     )

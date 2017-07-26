@@ -1,8 +1,8 @@
-import { createSaga } from 'kea'
+import { kea } from 'kea'
 
 import delay from '~/utils/delay'
 
-export default createSaga({
+export default kea({
   start: function * () {
     console.log('Starting homepage saga')
 
