@@ -51,23 +51,7 @@ var config = {
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        loader: 'babel-loader',
-        query: isProd ? {} : {
-          plugins: [
-            [
-              'react-transform',
-              {
-                transforms: [
-                  {
-                    transform: 'react-transform-hmr',
-                    imports: ['react'],
-                    locals: ['module']
-                  }
-                ]
-              }
-            ]
-          ]
-        }
+        loader: 'babel-loader'
       },
       {
         test: /\.(png|jpg)$/,
@@ -85,6 +69,11 @@ var config = {
     alias: {
       '~': path.join(__dirname, './app')
     }
+  },
+  resolveLoader: {
+    modules: [
+      path.join(__dirname, 'node_modules')
+    ]
   },
   plugins: [
     new webpack.optimize.CommonsChunkPlugin({
