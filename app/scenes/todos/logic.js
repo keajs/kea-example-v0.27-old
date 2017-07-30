@@ -1,4 +1,4 @@
-import { kea } from 'kea/logic'
+import { kea } from 'kea'
 import { PropTypes } from 'react'
 
 import createUuid from '~/utils/create-uuid'
