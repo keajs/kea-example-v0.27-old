@@ -1,6 +1,7 @@
 .kea-slider {
   display: block;
   width: 100%;
+  max-height: 600px;
   height: auto;
   text-align: center;
   position: relative;
@@ -33,17 +34,6 @@
       &.selected {
         background: #08FF04;
       }
-    }
-  }
-}
-
-@media (min-width: 960px) {
-  .kea-slider {
-    height: 600px;
-    overflow: hidden;
-
-    img {
-      position: absolute;
     }
   }
 }
