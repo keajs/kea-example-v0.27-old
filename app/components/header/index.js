@@ -5,7 +5,7 @@ import { connect } from 'kea'
 
 import { push } from 'react-router-redux'
 
-const routeSelector = state => state.routing.locationBeforeTransitions
+const routeSelector = state => state.router.location
 
 @connect({
   props: [

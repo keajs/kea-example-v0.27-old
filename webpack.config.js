@@ -11,12 +11,6 @@ var config = {
     common: [
       'babel-polyfill', 'react',
       './index.js'
-    ],
-    homepage: [
-      './scenes/homepage/scene.js'
-    ],
-    todos: [
-      './scenes/todos/scene.js'
     ]
   },
   output: {

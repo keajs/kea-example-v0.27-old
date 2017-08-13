@@ -1,14 +1,14 @@
-import { combineScenesAndRoutes } from 'kea/scene'
+import React from 'react'
+import { Route } from 'react-router'
 
-const scenes = {
-  homepage: require('bundle-loader?lazy&name=homepage!./homepage/scene.js'),
-  todos: require('bundle-loader?lazy&name=todos!./todos/scene.js')
-}
+import asyncComponent from '~/utils/async-component'
 
-const routes = {
-  '/': 'homepage',
-  '/todos': 'todos',
-  '/todos/:visible': 'todos'
-}
+export const Homepage = asyncComponent('Homepage', () => import(/* webpackChunkName: "homepage" */'./homepage'))
+export const Todos = asyncComponent('Todos', () => import(/* webpackChunkName: "todos" */'./todos'))
 
-export default combineScenesAndRoutes(scenes, routes)
+export default () => (
+  <div>
+    <Route exact path='/' component={Homepage} />
+    <Route path='/todos' component={Todos} />
+  </div>
+)
