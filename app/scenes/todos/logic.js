@@ -6,19 +6,7 @@ import createUuid from '~/utils/create-uuid'
 export default kea({
   path: () => ['scenes', 'todos', 'index'],
 
-  constants: () => [
-    'SHOW_ALL',
-    'SHOW_ACTIVE',
-    'SHOW_COMPLETED'
-  ],
-
   actions: ({ constants }) => ({
-    // tab
-    showAll: true,
-    showActive: true,
-    showCompleted: true,
-
-    // todos
     addTodo: value => ({ value }),
     removeTodo: id => ({ id }),
     completeTodo: id => ({ id }),
@@ -32,12 +20,6 @@ export default kea({
   }),
 
   reducers: ({ actions, constants }) => ({
-    visibilityFilter: [constants.SHOW_ALL, PropTypes.string, {
-      [actions.showAll]: () => constants.SHOW_ALL,
-      [actions.showActive]: () => constants.SHOW_ACTIVE,
-      [actions.showCompleted]: () => constants.SHOW_COMPLETED
-    }],
-
     todos: [{}, PropTypes.object, { persist: true }, {
       [actions.addTodo]: (state, payload) => {
         const { value } = payload
@@ -150,35 +132,21 @@ export default kea({
 
   // SELECTORS (data from reducer + more)
   selectors: ({ constants, selectors }) => ({
-    todoCount: [
+    allTodos: [
       () => [selectors.todos],
-      (todos) => Object.keys(todos).length,
-      PropTypes.number
+      (todos) => Object.values(todos),
+      PropTypes.array
     ],
 
-    activeTodoCount: [
-      () => [selectors.todos],
-      (todos) => Object.values(todos).filter(todo => !todo.completed).length,
-      PropTypes.number
+    activeTodos: [
+      () => [selectors.allTodos],
+      (allTodos) => allTodos.filter(todo => !todo.completed),
+      PropTypes.array
     ],
 
-    completedTodoCount: [
-      () => [selectors.todos],
-      (todos) => Object.values(todos).filter(todo => todo.completed).length,
-      PropTypes.number
-    ],
-
-    visibleTodos: [
-      () => [selectors.visibilityFilter, selectors.todos],
-      (visibilityFilter, todos) => {
-        if (visibilityFilter === constants.SHOW_ALL) {
-          return Object.values(todos)
-        } else if (visibilityFilter === constants.SHOW_ACTIVE) {
-          return Object.values(todos).filter(todo => !todo.completed)
-        } else if (visibilityFilter === constants.SHOW_COMPLETED) {
-          return Object.values(todos).filter(todo => todo.completed)
-        }
-      },
+    completedTodos: [
+      () => [selectors.allTodos],
+      (allTodos) => allTodos.filter(todo => todo.completed),
       PropTypes.array
     ]
   })

@@ -2,25 +2,18 @@ import './styles.scss'
 
 import React, { Component } from 'react'
 import { connect } from 'kea'
+import { Switch, Route } from 'react-router'
+import { NavLink } from 'react-router-dom'
 
 import Todo from './todo'
 
 import sceneLogic from './logic'
-
-const {
-  SHOW_ALL,
-  SHOW_ACTIVE,
-  SHOW_COMPLETED
-} = sceneLogic.constants
 
 const ENTER = 13
 
 @connect({
   actions: [
     sceneLogic, [
-      'showAll',
-      'showActive',
-      'showCompleted',
       'addTodo',
       'toggleAll',
       'clearCompleted'
@@ -28,22 +21,20 @@ const ENTER = 13
   ],
   props: [
     sceneLogic, [
-      'visibilityFilter',
-      'visibleTodos',
-      'todoCount',
-      'activeTodoCount',
-      'completedTodoCount'
+      'allTodos',
+      'activeTodos',
+      'completedTodos'
     ]
   ]
 })
 export default class TodosScene extends Component {
   handleToggleAll = (e) => {
-    const { toggleAll } = this.props.actions
+    const { toggleAll } = this.actions
     toggleAll(e.target.checked)
   }
 
   handleKeyDown = (e) => {
-    const { addTodo } = this.props.actions
+    const { addTodo } = this.actions
 
     if (e.keyCode === ENTER) {
       const node = this.refs.newTodo
@@ -56,8 +47,8 @@ export default class TodosScene extends Component {
   }
 
   render () {
-    const { visibilityFilter, visibleTodos, todoCount, activeTodoCount, completedTodoCount } = this.props
-    const { showAll, showActive, showCompleted, clearCompleted } = this.actions
+    const { allTodos, activeTodos, completedTodos } = this.props
+    const { clearCompleted } = this.actions
 
     return (
       <div className='todo-scene'>
@@ -66,31 +57,45 @@ export default class TodosScene extends Component {
             <h1>todos</h1>
             <input ref='newTodo' className='new-todo' placeholder='What needs to be done?' onKeyDown={this.handleKeyDown} />
           </header>
-          {todoCount > 0 ? (
+          {allTodos.length > 0 ? (
             <section className='main'>
-              <input className='toggle-all' type='checkbox' onChange={this.handleToggleAll} checked={activeTodoCount === 0} />
-              <ul className='todo-list'>
-                {visibleTodos.map(todo => <Todo key={todo.id} todo={todo} />)}
-              </ul>
+              <input className='toggle-all' type='checkbox' onChange={this.handleToggleAll} checked={activeTodos.length === 0} />
+              <Switch>
+                <Route path='/todos' exact>
+                  <ul className='todo-list'>
+                    {allTodos.map(todo => <Todo key={todo.id} todo={todo} />)}
+                  </ul>
+                </Route>
+                <Route path='/todos/active'>
+                  <ul className='todo-list'>
+                    {activeTodos.map(todo => <Todo key={todo.id} todo={todo} />)}
+                  </ul>
+                </Route>
+                <Route path='/todos/completed'>
+                  <ul className='todo-list'>
+                    {completedTodos.map(todo => <Todo key={todo.id} todo={todo} />)}
+                  </ul>
+                </Route>
+              </Switch>
             </section>
           ) : null}
-          {todoCount > 0 ? (
+          {allTodos.length > 0 ? (
             <footer className='footer'>
               <span className='todo-count'>
-                {activeTodoCount} {activeTodoCount === 1 ? 'todo' : 'todos'} left
+                {activeTodos.length} {activeTodos.length === 1 ? 'todo' : 'todos'} left
               </span>
               <ul className='filters'>
                 <li>
-                  <a href='#' onClick={showAll} className={visibilityFilter === SHOW_ALL ? 'selected' : ''}>All</a>
+                  <NavLink to='/todos' exact activeClassName='selected'>All</NavLink>
                 </li>
                 <li>
-                  <a href='#' onClick={showActive} className={visibilityFilter === SHOW_ACTIVE ? 'selected' : ''}>Active</a>
+                  <NavLink to='/todos/active' exact activeClassName='selected'>Active</NavLink>
                 </li>
                 <li>
-                  <a href='#' onClick={showCompleted} className={visibilityFilter === SHOW_COMPLETED ? 'selected' : ''}>Completed</a>
+                  <NavLink to='/todos/completed' exact activeClassName='selected'>Completed</NavLink>
                 </li>
               </ul>
-              {completedTodoCount > 0 ? (
+              {completedTodos.length > 0 ? (
                 <button className='clear-completed' onClick={clearCompleted}>Clear completed</button>
               ) : null}
             </footer>
