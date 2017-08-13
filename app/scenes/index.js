@@ -1,18 +1,21 @@
 import './styles.scss'
 
-import React, { Component } from 'react'
+import React from 'react'
+import { Route } from 'react-router'
+
+import asyncComponent from '~/utils/async-component'
 
 import Header from '~/components/header'
 
-import Routes from './routes'
+export const Homepage = asyncComponent('Homepage', () => import(/* webpackChunkName: "homepage" */'./homepage'))
+export const Todos = asyncComponent('Todos', () => import(/* webpackChunkName: "todos" */'./todos'))
 
-export default class App extends Component {
-  render () {
-    return (
-      <div>
-        <Header />
-        <Routes />
-      </div>
-    )
-  }
-}
+export default () => (
+  <div>
+    <Header />
+    <div>
+      <Route exact path='/' component={Homepage} />
+      <Route path='/todos' component={Todos} />
+    </div>
+  </div>
+)
