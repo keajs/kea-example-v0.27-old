@@ -1,5 +1,5 @@
-import { PropTypes } from 'react'
 import { kea } from 'kea'
+import PropTypes from 'prop-types'
 
 export default kea({
   path: () => ['scenes', 'homepage', 'index'],

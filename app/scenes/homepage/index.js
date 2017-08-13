@@ -21,7 +21,7 @@ import sceneLogic from './logic'
     ]
   ],
   sagas: [
-    sceneSaga.saga
+    sceneSaga
   ]
 })
 export default class HomepageScene extends Component {

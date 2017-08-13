@@ -1,11 +1,12 @@
 import './styles.scss'
 
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
 import { kea } from 'kea'
+import PropTypes from 'prop-types'
 
 import { take, race, put } from 'redux-saga/effects'
+import { delay } from 'redux-saga'
 
-import delay from '~/utils/delay'
 import range from '~/utils/range'
 
 import images from './images'

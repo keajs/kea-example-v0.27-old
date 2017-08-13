@@ -1,29 +1,22 @@
 import './styles.scss'
 
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import { connect } from 'kea'
 
 import { push } from 'react-router-redux'
-import { createStructuredSelector } from 'reselect'
 
-const selector = createStructuredSelector({
-  path: (state) => state.routing.locationBeforeTransitions.pathname
+const routeSelector = state => state.routing.locationBeforeTransitions
+
+@connect({
+  props: [
+    routeSelector, [
+      'pathname'
+    ]
+  ]
 })
-
-class Header extends Component {
-  static propTypes = {
-    // libs
-    dispatch: React.PropTypes.func.isRequired,
-
-    // react-router
-    path: React.PropTypes.string.isRequired
-  }
-
-  static defaultProps = {
-  }
-
+export default class Header extends Component {
   render () {
-    const { dispatch, path } = this.props
+    const { dispatch, pathname } = this.props
 
     function load (url) {
       return (event) => { event.preventDefault(); dispatch(push(url)) }
@@ -32,8 +25,8 @@ class Header extends Component {
     return (
       <header className='body-header'>
         <nav>
-          <a href='/' onClick={load('/')} className={path === '/' ? 'active' : ''}>Kea example</a>
-          <a href='/todos' onClick={load('/todos')} className={path.indexOf('/todos') === 0 ? 'active' : ''}>Todos</a>
+          <a href='/' onClick={load('/')} className={pathname === '/' ? 'active' : ''}>Kea example</a>
+          <a href='/todos' onClick={load('/todos')} className={pathname.indexOf('/todos') === 0 ? 'active' : ''}>Todos</a>
 
           <a className='right' href='https://www.github.com/keajs/kea-example' target='_blank'>Fork on Github</a>
         </nav>
@@ -41,5 +34,3 @@ class Header extends Component {
     )
   }
 }
-
-export default connect(selector)(Header)
