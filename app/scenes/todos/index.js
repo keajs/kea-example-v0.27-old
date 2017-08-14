@@ -2,7 +2,6 @@ import './styles.scss'
 
 import React, { Component } from 'react'
 import { connect } from 'kea'
-import { Switch, Route } from 'react-router'
 import { NavLink } from 'react-router-dom'
 
 import Todo from './todo'
@@ -21,9 +20,10 @@ const ENTER = 13
   ],
   props: [
     sceneLogic, [
-      'allTodos',
-      'activeTodos',
-      'completedTodos'
+      'visibleTodos',
+      'todoCount',
+      'activeTodoCount',
+      'completedTodoCount'
     ]
   ]
 })
@@ -47,7 +47,7 @@ export default class TodosScene extends Component {
   }
 
   render () {
-    const { allTodos, activeTodos, completedTodos } = this.props
+    const { visibleTodos, todoCount, activeTodoCount, completedTodoCount } = this.props
     const { clearCompleted } = this.actions
 
     return (
@@ -57,32 +57,18 @@ export default class TodosScene extends Component {
             <h1>todos</h1>
             <input ref='newTodo' className='new-todo' placeholder='What needs to be done?' onKeyDown={this.handleKeyDown} />
           </header>
-          {allTodos.length > 0 ? (
+          {visibleTodos.length > 0 ? (
             <section className='main'>
-              <input className='toggle-all' type='checkbox' onChange={this.handleToggleAll} checked={activeTodos.length === 0} />
-              <Switch>
-                <Route path='/todos' exact>
-                  <ul className='todo-list'>
-                    {allTodos.map(todo => <Todo key={todo.id} todo={todo} />)}
-                  </ul>
-                </Route>
-                <Route path='/todos/active'>
-                  <ul className='todo-list'>
-                    {activeTodos.map(todo => <Todo key={todo.id} todo={todo} />)}
-                  </ul>
-                </Route>
-                <Route path='/todos/completed'>
-                  <ul className='todo-list'>
-                    {completedTodos.map(todo => <Todo key={todo.id} todo={todo} />)}
-                  </ul>
-                </Route>
-              </Switch>
+              <input className='toggle-all' type='checkbox' onChange={this.handleToggleAll} checked={activeTodoCount === 0} />
+              <ul className='todo-list'>
+                {visibleTodos.map(todo => <Todo key={todo.id} todo={todo} />)}
+              </ul>
             </section>
           ) : null}
-          {allTodos.length > 0 ? (
+          {todoCount > 0 ? (
             <footer className='footer'>
               <span className='todo-count'>
-                {activeTodos.length} {activeTodos.length === 1 ? 'todo' : 'todos'} left
+                {activeTodoCount} {activeTodoCount === 1 ? 'todo' : 'todos'} left
               </span>
               <ul className='filters'>
                 <li>
@@ -95,7 +81,7 @@ export default class TodosScene extends Component {
                   <NavLink to='/todos/completed' exact activeClassName='selected'>Completed</NavLink>
                 </li>
               </ul>
-              {completedTodos.length > 0 ? (
+              {completedTodoCount > 0 ? (
                 <button className='clear-completed' onClick={clearCompleted}>Clear completed</button>
               ) : null}
             </footer>

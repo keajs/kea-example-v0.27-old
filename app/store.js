@@ -12,6 +12,8 @@ const reducers = combineReducers({
   scenes: keaReducer('scenes')
 })
 
+export const routeSelector = (state) => state.router.location
+
 const sagaMiddleware = createSagaMiddleware()
 const finalCreateStore = compose(
   applyMiddleware(sagaMiddleware),

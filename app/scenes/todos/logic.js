@@ -3,8 +3,16 @@ import PropTypes from 'prop-types'
 
 import createUuid from '~/utils/create-uuid'
 
+import { routeSelector } from '~/store'
+
 export default kea({
   path: () => ['scenes', 'todos', 'index'],
+
+  constants: () => [
+    'SHOW_ALL',
+    'SHOW_ACTIVE',
+    'SHOW_COMPLETED'
+  ],
 
   actions: ({ constants }) => ({
     addTodo: value => ({ value }),
@@ -132,22 +140,56 @@ export default kea({
 
   // SELECTORS (data from reducer + more)
   selectors: ({ constants, selectors }) => ({
+    visibilityFilter: [
+      () => [routeSelector],
+      ({ pathname }) => {
+        if (pathname === '/todos/active') {
+          return constants.SHOW_ACTIVE
+        } else if (pathname === '/todos/completed') {
+          return constants.SHOW_COMPLETED
+        } else {
+          return constants.SHOW_ALL
+        }
+      },
+      PropTypes.string
+    ],
+
     allTodos: [
       () => [selectors.todos],
       (todos) => Object.values(todos),
       PropTypes.array
     ],
 
-    activeTodos: [
-      () => [selectors.allTodos],
-      (allTodos) => allTodos.filter(todo => !todo.completed),
+    visibleTodos: [
+      () => [selectors.allTodos, selectors.visibilityFilter],
+      (todos, visibilityFilter) => {
+        if (visibilityFilter === constants.SHOW_ACTIVE) {
+          return todos.filter(todo => !todo.completed)
+        } else if (visibilityFilter === constants.SHOW_COMPLETED) {
+          return todos.filter(todo => todo.completed)
+        } else {
+          return todos
+        }
+      },
       PropTypes.array
     ],
 
-    completedTodos: [
+    todoCount: [
       () => [selectors.allTodos],
-      (allTodos) => allTodos.filter(todo => todo.completed),
-      PropTypes.array
+      (allTodos) => allTodos.length,
+      PropTypes.number
+    ],
+
+    activeTodoCount: [
+      () => [selectors.allTodos],
+      (allTodos) => allTodos.filter(todo => !todo.completed).length,
+      PropTypes.number
+    ],
+
+    completedTodoCount: [
+      () => [selectors.allTodos],
+      (allTodos) => allTodos.filter(todo => todo.completed).length,
+      PropTypes.number
     ]
   })
 })
