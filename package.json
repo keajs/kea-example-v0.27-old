@@ -23,6 +23,7 @@
     "es6-promise": "^4.1.1",
     "history": "^4.6.3",
     "kea": "^0.22.1",
+    "nprogress": "^0.2.0",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
