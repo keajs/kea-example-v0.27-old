@@ -1,3 +1,4 @@
+/* global expect, it, beforeEach */
 import { keaReducer } from 'kea'
 
 const scenesReducer = keaReducer('components')
