@@ -21,20 +21,17 @@ test('homepage logic has all the right properties', () => {
   // reducers
   const defaultValues = { name: 'Chirpy' }
   const state = { scenes: { homepage: { index: defaultValues } } }
-  expect(Object.keys(logic.reducers).sort()).toEqual(['capitalizedName', 'name'])
+  expect(Object.keys(logic.reducers).sort()).toEqual(['name'])
+  expect(Object.keys(logic.selectors).sort()).toEqual(['capitalizedName', 'name', 'root'])
 
-  expect(logic.reducers).toHaveProperty('name.reducer')
-  expect(logic.reducers).toHaveProperty('name.type', PropTypes.string)
-  expect(logic.reducers).toHaveProperty('name.value', 'Chirpy')
+  expect(logic.defaults).toHaveProperty('name', 'Chirpy')
+  expect(logic.propTypes).toHaveProperty('name', PropTypes.string)
 
-  const nameReducer = logic.reducers.name.reducer
-  expect(Object.keys(nameReducer)).toEqual([ updateName.toString() ])
-  expect(nameReducer[updateName.toString()]).toBeDefined()
-  expect(nameReducer[updateName.toString()]('', { name: 'newName' })).toBe('newName')
+  const nameReducer = logic.reducers.name
+  expect(nameReducer(undefined, updateName('newName'))).toEqual('newName')
 
-  expect(logic.reducers).not.toHaveProperty('capitalizedName.reducer')
-  expect(logic.reducers).toHaveProperty('capitalizedName.type', PropTypes.string)
-  expect(logic.reducers).not.toHaveProperty('capitalizedName.value', 'chirpy')
+  expect(logic.propTypes).toHaveProperty('capitalizedName', PropTypes.string)
+  expect(logic.defaults).not.toHaveProperty('capitalizedName')
 
   // big reducer
   expect(typeof logic.reducer).toBe('function')
